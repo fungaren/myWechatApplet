@@ -1,0 +1,3 @@
+<template name="tempCopyright">
+<view>FANG 版权没有</view>
+</template>
