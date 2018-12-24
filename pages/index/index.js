@@ -22,7 +22,6 @@ var pageCount = config.getPageCount;
 Page({
   data: {    
     postsList: [],
-    postsShowSwiperList:[],
     isLastPage:false,    
     page: 1,
     search: '',
@@ -32,11 +31,7 @@ Page({
     categoryName:"",
     showallDisplay:"block", 
     displayHeader:"none",
-    displaySwiper: "none",
     floatDisplay: "none",
-    displayfirstSwiper:"none",
-
-
   },
   formSubmit: function (e) {
     var url = '../list/list'
@@ -84,14 +79,10 @@ Page({
     self.setData({
       showerror: "none",
       showallDisplay:"none",
-      displaySwiper:"none",
       floatDisplay:"none",
       isLastPage:false,
-      page:0,
-      postsShowSwiperList:[]
+      page:0
     });
-    this.fetchTopFivePosts(); 
-    
   },
   onReachBottom: function () {  
 
@@ -109,66 +100,16 @@ Page({
    
   },
   onLoad: function (options) {
-    var self = this; 
-    this.fetchTopFivePosts();
+    var self = this;
+	this.fetchPostsData(self.data);
     self.setData({
 
     });
-       
   },
-  onShow: function (options){
-      wx.setStorageSync('openLinkCount', 0);
+	onShow: function (options) {
+		wx.setStorageSync('openLinkCount', 0);
 
-  },  
-  fetchTopFivePosts: function () {
-    var self = this;
-    //取置顶的文章
-    var getPostsRequest = wxRequest.getRequest(Api.getSwiperPosts());
-    getPostsRequest.then(response => {
-        if (response.data.status =='200' && response.data.posts.length > 0) {
-                self.setData({
-                    postsShowSwiperList: response.data.posts,
-                    postsShowSwiperList: self.data.postsShowSwiperList.concat(response.data.posts.map(function (item) {
-                        //item.firstImage = Api.getContentFirstImage(item.content.rendered);
-                        if (item.post_medium_image_300 == null || item.post_medium_image_300 == '') {
-                            if (item.content_first_image != null && item.content_first_image != '') {
-                                item.post_medium_image_300 = item.content_first_image;
-                            }
-                            else {
-                                item.post_medium_image_300 = "../../images/logo700.png";
-                            }
-
-                        }
-                        return item;
-                    })),
-                    showallDisplay: "block",
-                    displaySwiper: "block"
-                });
-            }
-            else {
-                self.setData({
-                    displaySwiper: "none",
-                    displayHeader: "block",
-                    showallDisplay: "block",
-                });
-            }
-     
-    })
-        .then(response=>{
-            self.fetchPostsData(self.data);
-        })
-        .catch(function (response){
-            console.log(response); 
-            self.setData({
-                showerror: "block",
-                floatDisplay: "none"
-            });
-        })
-        .finally(function () {
-        
-    });            
-   
-  },
+	},
 
   //获取文章列表数据
   fetchPostsData: function (data) {
@@ -187,8 +128,7 @@ Page({
       mask:true
     }); 
     var getPostsRequest = wxRequest.getRequest(Api.getPosts(data));
-    getPostsRequest
-        .then(response => {
+    getPostsRequest.then(response => {
             if (response.statusCode === 200) {
 
                 if (response.data.length < pageCount) {
