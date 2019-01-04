@@ -10,32 +10,26 @@
  */
 
 var util = require('util.js');
-var wxApi = require('wxApi.js')
-var wxRequest = require('wxRequest.js')
 var Api = require('api.js');
 var app = getApp();
 module.exports = {
     //获取用户信息和openid
-    getUsreInfo: function (userInfoDetail) {       
-        var wxLogin = wxApi.wxLogin();
+    getUsreInfo: function (userInfoDetail) {
+        var wxLogin = Api.wxLogin();
         var jscode = '';
        
         wxLogin().then(response => {
             jscode = response.code
             if (userInfoDetail ==null)
             {
-                var userInfo = wxApi.wxGetUserInfo();
+                var userInfo = Api.wxGetUserInfo();
                 return userInfo();
             }
-            else
-            {                
+            else 
                 return userInfoDetail;
-            }
-            
-            
-        }).
+        })
+		.then(response => {
             //获取用户信息
-            then(response => {
                 console.log(response.userInfo);
                 console.log("成功获取用户信息(公开信息)");
                 app.globalData.userInfo = response.userInfo;
@@ -55,8 +49,8 @@ module.exports = {
     },
     getOpenId(data)
     {
-        var url = Api.getOpenidUrl();        
-        var postOpenidRequest = wxRequest.postRequest(url, data);
+        var url = Api.getOpenidUrl();
+        var postOpenidRequest = Api.postRequest(url, data);
         //获取openid
         postOpenidRequest.then(response => {
             if (response.data.status == '200') {
@@ -71,5 +65,4 @@ module.exports = {
             }
         }) 
     }
-
 }

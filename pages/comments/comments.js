@@ -13,8 +13,6 @@
 var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
 var WxParse = require('../../wxParse/wxParse.js');
-var wxApi = require('../../utils/wxApi.js')
-var wxRequest = require('../../utils/wxRequest.js')
 
 import config from '../../utils/config.js'
 var pageCount = config.getPageCount;
@@ -64,7 +62,7 @@ Page({
             title: '正在加载',
             mask: true
         });
-        var getNewComments = wxRequest.getRequest(Api.getNewComments());
+        var getNewComments = Api.getRequest(Api.getNewComments());
         getNewComments.then(response => {
             if (response.statusCode == 200) {
                 this.setData({

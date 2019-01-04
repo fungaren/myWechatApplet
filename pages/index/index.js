@@ -13,8 +13,6 @@
 var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
 var WxParse = require('../../wxParse/wxParse.js');
-var wxApi = require('../../utils/wxApi.js')
-var wxRequest = require('../../utils/wxRequest.js')
 import config from '../../utils/config.js'
 var pageCount = config.getPageCount;
 
@@ -127,7 +125,7 @@ Page({
       title: '正在加载',
       mask:true
     }); 
-    var getPostsRequest = wxRequest.getRequest(Api.getPosts(data));
+    var getPostsRequest = Api.getRequest(Api.getPosts(data));
     getPostsRequest.then(response => {
             if (response.statusCode === 200) {
 

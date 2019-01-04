@@ -15,15 +15,12 @@
 <import src="../../templates/copyright.wxml" />
 
 <view class="showerror" style="display:{{showerror}}">
-    <image src="../../images/cry80.png" style="height:100rpx;width:100rpx"></image>
     <view class="errortext">
         暂时无法访问网络,下拉重试...
-
     </view>
 </view>
 
 <view style="display:{{showallDisplay}}">
-
     <view style="display:{{floatDisplay}}">
         <form catchsubmit="formSubmit" catchreset="formReset" id="search-form">
             <view class="search-pancel">

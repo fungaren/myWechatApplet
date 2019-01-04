@@ -9,41 +9,40 @@
  * 
  */
 
-
 App({
-    
-  onLaunch: function () {
-    //调用API从本地缓存中获取数据
-    var logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-    
-
-    
-  },
-  getUserInfo:function(cb){
-    var that = this
-    if(this.globalData.userInfo){
-      typeof cb == "function" && cb(this.globalData.userInfo)
-    }else{
-      //调用登录接口
-      wx.login({
-        success: function () {
-          wx.getUserInfo({
-            success: function (res) {
-              that.globalData.userInfo = res.userInfo
-              typeof cb == "function" && cb(that.globalData.userInfo)
-            }
-          })
-        }
-      })
-    }
-  },
-  globalData:{
-    userInfo:null,
-    openid:'',
-    isGetUserInfo:false,
-    isGetOpenid:false
-
-  }
+	onLaunch: function () {
+		// 从本地缓存中读取登陆记录
+		var login_date = wx.getStorageSync('login_date') || []
+		login_date.unshift(Date.now()) // 在数组顶部插入一条记录
+		wx.setStorageSync('login_date', login_date)
+	},
+	getUserInfo: function (cb) {
+		var that = this
+		// 已经登陆
+		if (this.globalData.userInfo) {
+			// 回调
+			typeof cb == "function" && cb(this.globalData.userInfo)
+		} else {
+			// 登陆
+			wx.login({
+				success: function () {
+					// 获取用户数据
+					wx.getUserInfo({
+						success: function (res) {
+							// 存储到全局区
+							that.globalData.userInfo = res.userInfo
+							// 回调
+							typeof cb == "function" && cb(that.globalData.userInfo)
+						}
+					})
+				}
+			})
+		}
+	},
+	globalData:{
+		userInfo: null,
+		openid: '',
+		isGetUserInfo: false,
+		isGetOpenid: false
+	}
 })

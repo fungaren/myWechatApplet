@@ -14,8 +14,6 @@ var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
 var auth = require('../../utils/auth.js');
 var WxParse = require('../../wxParse/wxParse.js');
-var wxApi = require('../../utils/wxApi.js')
-var wxRequest = require('../../utils/wxRequest.js');
 var app = getApp();
 Page({
     data: {
@@ -43,7 +41,7 @@ Page({
             categoriesList: []
         });
         //console.log(Api.getCategories());
-        var getCategoriesRequest = wxRequest.getRequest(Api.getCategories());
+        var getCategoriesRequest = Api.getRequest(Api.getCategories());
         getCategoriesRequest.then(response => {
             if (response.statusCode === 200) {
                 self.setData({
@@ -102,7 +100,7 @@ Page({
         })
         if (app.globalData.isGetOpenid) {
             var url = Api.getSubscription() + '?openid=' + app.globalData.openid;
-            var getSubscriptionRequest = wxRequest.getRequest(url);
+            var getSubscriptionRequest = Api.getRequest(url);
             getSubscriptionRequest.then(res => {
                 if (res.data.status == '200')
                 {
@@ -176,7 +174,7 @@ Page({
                 openid: openid
             };
 
-            var postSubscriptionRequest = wxRequest.postRequest(url, data);
+            var postSubscriptionRequest = Api.postRequest(url, data);
             postSubscriptionRequest.then(response => {
                 if (response.statusCode === 200) {
                     if (response.data.status == '200') {
@@ -354,13 +352,13 @@ Page({
     },
     //获取用户信息和openid
     getUsreInfo: function (userInfoDetail) {
-        var wxLogin = wxApi.wxLogin();
+        var wxLogin = Api.wxLogin();
         var jscode = '';
 
         wxLogin().then(response => {
             jscode = response.code
             if (userInfoDetail == null) {
-                var userInfo = wxApi.wxGetUserInfo();
+                var userInfo = Api.wxGetUserInfo();
                 return userInfo();
             }
             else {
@@ -387,7 +385,7 @@ Page({
     getOpenId(data) {
         var url = Api.getOpenidUrl();
         var self  = this;
-        var postOpenidRequest = wxRequest.postRequest(url, data);
+        var postOpenidRequest = Api.postRequest(url, data);
         //获取openid
         postOpenidRequest.then(response => {
             if (response.data.status == '200') {
