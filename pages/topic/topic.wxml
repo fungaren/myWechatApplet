@@ -22,6 +22,4 @@
     </view>
 </scroll-view>
 
-<template is="login-popup" data="{{userInfo: userInfo}}"></template>
-
 <template is="tempCopyright" />

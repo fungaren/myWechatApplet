@@ -11,7 +11,7 @@
  *
  */-->
 
-<import src="../../templates/common-list.wxml" />
+<import src="../../templates/articlesList.wxml" />
 <import src="../../templates/copyright.wxml" />
 
 <view class="showerror" style="display:{{showerror}}">
@@ -32,7 +32,7 @@
     	<!-- 加载图文列表 -->
         <view class="index-container">
 			<!-- 文章列表模板 -->
-            <template is="tempCommonList" data="{{postsList}}" />
+            <template is="articlesList" data="{{postsList}}" />
 			
             <view class="loadMore">
             	<view hidden="{{isLastPage}}">

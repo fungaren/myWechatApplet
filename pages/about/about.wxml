@@ -14,15 +14,14 @@
 <import src="../../templates/copyright.wxml" />
 <import src="../../templates/login-popup.wxml" />
 
-<view class="container" style="display:{{display}}">
+<view class="container" style="display:{{displayContent}}">
     <view class="wrapper">
         <view class="excerpt">
-            <!--  <rich-text nodes="{{pageData.content.rendered}}"></rich-text> -->
-            <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+			<!-- 正文内容 -->
+            <template is="wxParse" data="{{wxParseData: article.nodes}}" />
         </view>
 		
-		<template is="login-popup" data="{{userInfo: userInfo}}">
-		</template>
+		<template is="login-popup" data="{{userInfo: userInfo}}" />
 
         <view class="praisePost" style='text-align:center'>
     		<button class="praise-button" formType="submit" size="mini" bindtap="praise">捐赠</button>

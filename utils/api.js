@@ -8,7 +8,7 @@
  * 开源协议：MIT
  * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
  */
-
+// 利用这个包装，可以把 success 和 fail 的结果都返回
 function wxPromisify(fn) {
 	return function (obj = {}) {
 		return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ function wxPromisify(fn) {
 		})
 	}
 }
-// 无论promise对象最后状态如何都会执行
+// 定义 finally 方法，无论promise对象最后状态如何都会执行
 Promise.prototype.finally = function (callback) {
 	let P = this.constructor;
 	return this.then(
@@ -108,7 +108,6 @@ function wxNavigateTo(url, params) {
 import config from 'config.js'
 var domain = config.getDomain;
 var HOST_URI = 'https://' + domain + '/wp-json/wp/v2/';
-var HOST_URI_WATCH_LIFE_JSON = 'https://' + domain + '/wp-json/watch-life-net/v1/';
 
 module.exports = {
 	postRequest: postRequest,
@@ -146,11 +145,6 @@ module.exports = {
 	// getStickyPosts: function () {
 	// 	return HOST_URI + 'posts?sticky=true&per_page=5&page=1';
 	// },
-
-	//获取是否开启评论的设置
-	getEnableComment: function () {
-		return HOST_URI_WATCH_LIFE_JSON + 'options/enableComment';
-	},
 
 	// // 获取tag相关的文章列表
 	// getPostsByTags: function (id, tags) {
@@ -194,13 +188,7 @@ module.exports = {
 
 	// 获取某文章评论
 	getComments: function (obj) {
-		return HOST_URI + 'comments?per_page=100&orderby=date&order=asc&post=' + obj.postID + '&page=' + obj.page;
-	},
-
-	// 获取文章评论及其回复
-	getCommentsReplay: function (obj) {
-		return HOST_URI_WATCH_LIFE_JSON + 'comment/getcomments?postid=' +
-			obj.postId + '&limit=' + obj.limit + '&page=' + obj.page + '&order=desc';
+		return HOST_URI + 'comments?per_page=100&orderby=date&order=asc&post=' + obj.postId + '&page=' + obj.page;
 	},
 
 	// 获取网站的最新20条评论
@@ -210,7 +198,7 @@ module.exports = {
 
 	// 获取回复
 	getChildrenComments: function (obj) {
-		return HOST_URI + 'comments?parent_exclude=0&per_page=100&orderby=date&order=desc&post=' + obj.postID
+		return HOST_URI + 'comments?parent_exclude=0&per_page=100&orderby=date&order=desc&post=' + obj.postId
 	},
 
 	// //获取最近的30个评论
@@ -223,23 +211,4 @@ module.exports = {
 		return HOST_URI + 'comments'
 	},
 
-	// 提交微信评论
-	postWeixinComment: function () {
-		return HOST_URI_WATCH_LIFE_JSON + 'comment/add'
-	},
-
-	// 获取微信评论
-	getWeixinComment: function (openid) {
-		return HOST_URI_WATCH_LIFE_JSON + 'comment/get?openid=' + openid;
-	},
-
-	// 更新文章浏览数
-	updatePageviews(id) {
-		return HOST_URI_WATCH_LIFE_JSON + "post/addpageview/" + id;
-	},
-
-	// 获取用户openid
-	getOpenidUrl(id) {
-		return HOST_URI_WATCH_LIFE_JSON += "weixin/getopenid";
-	}
 };

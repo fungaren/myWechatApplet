@@ -2,12 +2,12 @@
 var Api = require('api.js');
 var WxParse = require('../wxParse/wxParse.js');
 import config from 'config.js'
+var app = getApp();
 
 module.exports = {
 	// 获取指定分类id下的所有文章
 	fetchCategoryPosts: function (page, id) {
-		var self = page;
-		self.setData({
+		page.setData({
 			category: []
 		});
 		Api.getRequest(Api.getCategoryByID(id)).then(response => {
@@ -18,7 +18,7 @@ module.exports = {
 			else {
 				catImage = response.data.category_thumbnail_image;
 			}
-			self.setData({
+			page.setData({
 				category: response.data
 			});
 			wx.setNavigationBarTitle({
@@ -27,19 +27,18 @@ module.exports = {
 					// success
 				}
 			});
-			this.fetchPostsData(self, self.data);
+			this.fetchPostsData(page, page.data);
 		})
 	},
 
 	// 获取文章列表数据
 	fetchPostsData: function (page, data) {
-		var self = page;
 		if (!data) data = {};
 		if (!data.page) data.page = 1;
 		if (!data.category) data.category = {id: 0, name: ''};
 		if (!data.searchKey) data.search = '';
 		if (data.page === 1) {
-			self.setData({
+			page.setData({
 				postsList: []
 			});
 		};
@@ -51,14 +50,14 @@ module.exports = {
 			if (response.statusCode === 200) {
 				// 返回的文章数量小于每页的文章数
 				if (response.data.length < config.getPageCount) {
-					self.setData({
+					page.setData({
 						isLastPage: true
 					});
 				}
 				// 显示文章列表
-				self.setData({
+				page.setData({
 					floatDisplay: "block",
-					postsList: self.data.postsList.concat(response.data.map(function (item) {
+					postsList: page.data.postsList.concat(response.data.map(function (item) {
 						if (item.category_name != null)
 							item.categoryImage = "../../images/category.png";
 						else
@@ -85,7 +84,7 @@ module.exports = {
 			else {
 				// 达到最大页数
 				if (response.data.code == "rest_post_invalid_page_number") {
-					self.setData({
+					page.setData({
 						isLastPage: true
 					});
 					wx.showToast({
@@ -105,7 +104,7 @@ module.exports = {
 		})
 		.catch(function (response) {
 			if (data.page == 1) {
-				self.setData({
+				page.setData({
 					showerror: "block",
 					floatDisplay: "none"
 				});
@@ -116,7 +115,7 @@ module.exports = {
 					content: '加载数据失败，请重试',
 					showCancel: false,
 				});
-				self.setData({
+				page.setData({
 					page: data.page - 1
 				});
 			}
@@ -126,4 +125,128 @@ module.exports = {
 			wx.stopPullDownRefresh();
 		});
 	},
+
+	// 获取页面内容
+	fetchPageData: function (page, id) {
+		Api.getRequest(Api.getPageByID(id)).then(response => {
+			// 解析HTML数据
+			WxParse.wxParse('article', 'html', response.data.content.rendered, page, 5);
+			page.setData({
+				displayContent: 'block'
+			});
+		});
+	},
+	// 获取文章内容
+	fetchPostData: function (page, id) {
+		var self = this;
+		Api.getRequest(Api.getPostByID(id)).then(response => {
+			// 标题中的HTML转义
+			response.data.title.rendered = WxParse.htmlDecode(response.data.title.rendered)
+			WxParse.wxParse('article', 'html', response.data.content.rendered, page, 5);
+			if (response.data.total_comments != null && response.data.total_comments != '') {
+				page.setData({
+					commentCount: "有" + response.data.total_comments + "条评论"
+				});
+			};
+			page.setData({
+				detail: response.data,
+				postId: id,
+				date: response.data.date.substring(0, 10),
+				displayContent: 'block',
+			});
+		})
+		.then(response => {
+			// 设置标题
+			wx.setNavigationBarTitle({
+				title: page.data.detail.title.rendered
+			});
+		});
+	},
+	onClickHyperLink: function (href) {
+		// 站外链接
+		if (href.indexOf(config.getDomain) == -1) {
+			wx.setClipboardData({
+				data: url,
+				success: function (res) {
+					wx.getClipboardData({
+						success: function (res) {
+							wx.showToast({
+								title: '链接已复制',
+								image: '../../images/link.png',
+								duration: 2000
+							})
+						}
+					})
+				}
+			})
+		}
+		else {
+			// 站内链接进行跳转
+			var postId = href.substring(href.lastIndexOf("/") + 1);
+			if (postId == config.getDomain || postId == '') {
+				wx.switchTab({
+					url: '../index/index'
+				})
+			}
+			else {
+				wx.redirectTo({
+					url: '../detail/detail?id=' + postId
+				})
+			}
+		}
+	},
+	// // 获取用户授权
+	// isAuthorized: function () {
+	// 	wx.getSetting({
+	// 		success: function success(res) {
+	// 			if (!('scope.userInfo' in res.authSetting)) {
+	// 				console.log('从未授权');
+	// 				app.globalData.isAuthorized = false;
+	// 			} else {
+	// 				if (res.authSetting['scope.userInfo'] === false) {
+	// 					console.log('用户拒绝过授权', res.authSetting);
+	// 					app.globalData.isAuthorized = false;
+	// 					wx.showModal({
+	// 						title: '用户未授权',
+	// 						content: '如需正常使用评论、点赞、赞赏等功能需授权获取用户信息。请在授权管理中启用',
+	// 						showCancel: true,
+	// 						confirmText: '设置权限',
+	// 						success: function (res) {
+	// 							if (res.confirm) {
+	// 								wx.openSetting({
+	// 									success: function success(res) {
+	// 										if (res.authSetting["scope.userInfo"] === true) {
+	// 											console.log('用户已同意授权', res.authSetting);
+	// 											app.globalData.isAuthorized = true;
+	// 										}
+	// 									}
+	// 								});
+	// 							}
+	// 						}
+	// 					});
+	// 				} else {
+	// 					console.log('用户已经授权过', res.authSetting);
+	// 					app.globalData.isAuthorized = true;
+	// 				}
+	// 			}
+	// 		}
+	// 	});
+	// },
+	// // 获取用户信息
+	// getUserInfo: function () {
+	// 	// 注意必须先调用 wx.login 之后才能 getUserInfo
+	// 	var wxLogin = Api.wxLogin();
+	// 	wxLogin().then(response => {
+	// 		var userInfo = Api.wxGetUserInfo();
+	// 		return userInfo();
+	// 	})
+	// 	.then(res => {
+	// 		console.log("成功获取用户公开信息", res.userInfo);
+	// 		// 把数据保存到全局区域以便下次读取
+	// 		app.globalData.userInfo = res.userInfo;
+	// 	})
+	// 	.catch(function (error) {
+	// 		console.error(error.errMsg);
+	// 	})
+	// }
 }

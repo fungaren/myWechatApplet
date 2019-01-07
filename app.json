@@ -2,7 +2,6 @@
     "pages": [
         "pages/index/index",
         "pages/detail/detail",
-        "pages/page/page",
         "pages/about/about",
         "pages/list/list",
         "pages/topic/topic"
