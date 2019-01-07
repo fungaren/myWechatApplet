@@ -76,26 +76,29 @@ function wxAutoImageCal(originalWidth, originalHeight, that, bindName) {
 	return results;
 }
 
-function wxParse(bindName='wxParseData', type='html', data='<div class="color:red;">数据不能为空</div>', target, imagePadding) {
+function wxParse(bindName='wxParseData', type='html',
+				 data='<div class="color:red;">数据不能为空</div>',
+				 target, imagePadding)
+{
 	var that = target;
 	var transData = {};//存放转化后的数据
 	if (type == 'html') {
 		transData = HtmlToJson.html2json(data, bindName);
-		console.log(JSON.stringify(transData, ' ', ' '));
+		//console.log(JSON.stringify(transData, ' ', ' '));
 	} else if (type == 'md' || type == 'markdown') {
 		var converter = new showdown.Converter();
 		var html = converter.makeHtml(data);
 		transData = HtmlToJson.html2json(html, bindName);
-		console.log(JSON.stringify(transData, ' ', ' '));
+		//console.log(JSON.stringify(transData, ' ', ' '));
 	}
 	transData.view = {};
 	transData.view.imagePadding = 0;
 	if (typeof(imagePadding) != 'undefined')
-		transData.view.imagePadding = imagePadding
+		transData.view.imagePadding = imagePadding;
 
 	var bindData = {};
 	bindData[bindName] = transData;
-	that.setData(bindData)
+	that.setData(bindData);
 
 	// 图片视觉宽高计算
 	that.wxParseImgLoad = function (e) {
@@ -103,7 +106,7 @@ function wxParse(bindName='wxParseData', type='html', data='<div class="color:re
 		var tagFrom = e.target.dataset.from;
 		var idx = e.target.dataset.idx;
 		if (typeof (tagFrom) != 'undefined' && tagFrom.length > 0) {
-			calMoreImageInfo(e, idx, that, tagFrom)
+			calMoreImageInfo(e, idx, that, tagFrom);
 		}
 	}
 
@@ -121,7 +124,7 @@ function wxParse(bindName='wxParseData', type='html', data='<div class="color:re
 	};
 }
 
-function wxParseTemArray(temArrayName,bindNameReg,total,that){
+function wxParseTemArray(temArrayName,bindNameReg,total,that) {
 	var array = [];
 	var temData = that.data;
 	var obj = null;
@@ -142,6 +145,7 @@ function emojisInit(reg='', baseSrc="/wxParse/emojis/", emojis) {
 
 module.exports = {
 	wxParse: wxParse,
-	wxParseTemArray:wxParseTemArray,
-	emojisInit:emojisInit
+	wxParseTemArray: wxParseTemArray,
+	emojisInit: emojisInit,
+	htmlDecode: HtmlToJson.htmlDecode
 }

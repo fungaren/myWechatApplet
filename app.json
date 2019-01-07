@@ -5,8 +5,7 @@
         "pages/page/page",
         "pages/about/about",
         "pages/list/list",
-        "pages/topic/topic",
-        "pages/comments/comments"
+        "pages/topic/topic"
     ],
     "window": {
         "backgroundTextStyle": "dark",

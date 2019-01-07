@@ -8,7 +8,6 @@
  * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
  * 
  */
-@import "vendor/ZanUI/index.wxss";
 .container {
 	padding: 0 24rpx;
 	background-color: #fff;
@@ -24,10 +23,7 @@
 	border-bottom: 2rpx solid #ededed;
 	margin-bottom: 8rpx;
 }
-.wxParse-p {
-	margin-top: 30rpx;
-}
-.loadingmore {
+.loadMore {
 	margin-top: 24rpx;
 	text-align: center;
 	margin-bottom: 24rpx;
@@ -116,13 +112,10 @@
 	table-layout: center;
 }
 .copyright {
-	font-size: 26rpx;
-	line-height: 1.6;
-	font-weight: 400;
+	font-size: 30rpx;
 	text-align: center;
-	color: #c4c4c4;
-	margin-top: 48rpx;
-	padding-bottom: 80rpx;
+	margin: 1rem 0;
+	color:#777;
 }
 .common-gap {
 	width: 100%;
@@ -172,12 +165,11 @@
 		transform: scale(1);
 	}
 }
-.login-popup .zan-popup__container {
+.login-popup {
     background-color: transparent;
 }
 .login-popup-wrapper {
     margin: 0 25px;
-    
 }
 .login-popup button {
     background-color: transparent;
@@ -234,27 +226,23 @@
     width: 15px;
     height: 15px;
 }
-.login-popup .zan-popup__mask {
+.login-popup {
     z-index: 11;
 }
-.login-popup .zan-popup__container {
+.login-popup {
     z-index: 12;
 }
-.zan-popup .zan-popup__container {
-    width: 100%;
-    overflow: visible;
-}
-.zan-popup .popup-wrapper {
+.popup-wrapper {
     width: 100%;
     padding: 0 15px;
     padding-bottom: 10px;
     overflow: visible;
 }
-.zan-popup .popup-wrapper .popup-title {
+.popup-wrapper .popup-title {
     font-size: 16px;
     padding: 15px 0;
 }
-.zan-popup .btn-primary.confirm {
+.btn-primary.confirm {
     height: 50px;
     line-height: 50px;
     border-radius: 0;

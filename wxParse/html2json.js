@@ -375,7 +375,7 @@ function removeDOCTYPE(html) {
 
 function trimHtml(html) {
 	return html
-        .replace(/\n+/g, '')
+        .replace(/\n+/g, '') // 会导致代码块中的换行丢失
         .replace(/<!--.*?-->/ig, '')
         .replace(/\/\*.*?\*\//ig, '')
         .replace(/[ ]+</ig, '<')
@@ -606,5 +606,6 @@ function emojisInit(reg, baseSrc, emojis) {
 
 module.exports = {
     html2json: html2json,
-    emojisInit:emojisInit
+    emojisInit: emojisInit,
+	htmlDecode: strDecode
 };

@@ -9,15 +9,13 @@
  * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
  */
 
-var util = require('util.js');
 var Api = require('api.js');
 var app = getApp();
 module.exports = {
-    //获取用户信息和openid
-    getUsreInfo: function (userInfoDetail) {
+    // 获取用户信息和openid
+    getUserInfo: function (userInfoDetail) {
         var wxLogin = Api.wxLogin();
         var jscode = '';
-       
         wxLogin().then(response => {
             jscode = response.code
             if (userInfoDetail ==null)
@@ -29,12 +27,10 @@ module.exports = {
                 return userInfoDetail;
         })
 		.then(response => {
-            //获取用户信息
                 console.log(response.userInfo);
-                console.log("成功获取用户信息(公开信息)");
+                console.log("成功获取用户公开信息");
                 app.globalData.userInfo = response.userInfo;
                 app.globalData.isGetUserInfo = true;
-
                 var data = {
                     js_code: jscode,
                     encryptedData: response.encryptedData,
@@ -49,16 +45,14 @@ module.exports = {
     },
     getOpenId(data)
     {
-        var url = Api.getOpenidUrl();
-        var postOpenidRequest = Api.postRequest(url, data);
-        //获取openid
+		var postOpenidRequest = Api.postRequest(Api.getOpenidUrl(), data);
+        // 获取openid
         postOpenidRequest.then(response => {
             if (response.data.status == '200') {
-                //console.log(response.data.openid)
+                console.log(response.data.openid)
                 console.log("openid 获取成功");
                 app.globalData.openid = response.data.openid;
                 app.globalData.isGetOpenid = true;
-
             }
             else {
                 console.log(response);

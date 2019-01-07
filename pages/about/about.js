@@ -11,12 +11,10 @@
  */
 
 var Api = require('../../utils/api.js');
-var util = require('../../utils/util.js');
 var WxParse = require('../../wxParse/wxParse.js');
 var auth = require('../../utils/auth.js');
 import config from '../../utils/config.js'
 var app = getApp();
-
 
 Page({
 	data: {
@@ -31,13 +29,10 @@ Page({
 			hidden: true
 		},
 		userInfo: app.globalData.userInfo,
-		isLoginPopup: false
-
-
 	},
 	onLoad: function (options) {
 		wx.setNavigationBarTitle({
-			title: '关于WordPress微信小程序',
+			title: '关于 ' + config.getWebsiteName + ' 官方小程序',
 			success: function (res) {
 				// success
 			}
@@ -68,7 +63,7 @@ Page({
 	},
 	onShareAppMessage: function () {
 		return {
-			title: '关于“' + config.getWebsiteName + '”官方小程序',
+			title: '关于 ' + config.getWebsiteName + ' 官方小程序',
 			path: 'pages/about/about',
 			success: function (res) {
 				// 转发成功
@@ -83,9 +78,8 @@ Page({
 		var self = this;
 		var href = e.currentTarget.dataset.src;
 		console.log(href);
-		var domain = config.getDomain;
-		//我们可以在这里进行一些路由处理
-		if (href.indexOf(domain) == -1) {
+		// 站外链接
+		if (href.indexOf(config.getDomain) == -1) {
 			wx.setClipboardData({
 				data: href,
 				success: function (res) {
@@ -103,37 +97,19 @@ Page({
 			})
 		}
 		else {
-			var slug = util.GetUrlFileName(href, domain);
-			if (slug == 'index') {
+			// 站内链接进行跳转
+			var postId = href.substring(href.lastIndexOf("/") + 1);
+			if (postId == config.getDomain || postId == '') {
 				wx.switchTab({
 					url: '../index/index'
 				})
 			}
 			else {
-				var getPostSlugRequest = Api.getRequest(Api.getPostBySlug(slug));
-				getPostSlugRequest
-					.then(res => {
-						var postID = res.data[0].id;
-						var openLinkCount = wx.getStorageSync('openLinkCount') || 0;
-						if (openLinkCount > 4) {
-							wx.redirectTo({
-								url: '../detail/detail?id=' + postID
-							})
-						}
-						else {
-							wx.navigateTo({
-								url: '../detail/detail?id=' + postID
-							})
-							openLinkCount++;
-							wx.setStorageSync('openLinkCount', openLinkCount);
-						}
-
-					})
-
+				wx.redirectTo({
+					url: '../detail/detail?id=' + postId
+				})
 			}
-
 		}
-
 	},
 	userAuthorization: function () {
 		var self = this;
@@ -143,10 +119,7 @@ Page({
 				console.log(res.authSetting);
 				var authSetting = res.authSetting;
 				if (!('scope.userInfo' in authSetting)) {
-					//if (util.isEmptyObject(authSetting)) {
 					console.log('第一次授权');
-					self.setData({ isLoginPopup: true })
-
 				} else {
 					console.log('不是第一次授权', authSetting);
 					// 没有授权的提醒
@@ -166,7 +139,7 @@ Page({
 											console.log('打开设置', res.authSetting);
 											var scopeUserInfo = res.authSetting["scope.userInfo"];
 											if (scopeUserInfo) {
-												auth.getUsreInfo(null);
+												auth.getUserInfo(null);
 											}
 										}
 									});
@@ -175,29 +148,20 @@ Page({
 						})
 					}
 					else {
-						auth.getUsreInfo(null);
-
+						auth.getUserInfo(null);
 					}
 				}
 			}
 		});
 	},
+	// 用户点击登陆
 	agreeGetUser: function (e) {
 		var userInfo = e.detail.userInfo;
 		var self = this;
 		if (userInfo) {
-			auth.getUsreInfo(e.detail);
+			auth.getUserInfo(e.detail);
 			self.setData({ userInfo: userInfo });
 		}
-		setTimeout(function () {
-			self.setData({ isLoginPopup: false })
-		}, 1200);
-	},
-	closeLoginPopup() {
-		this.setData({ isLoginPopup: false });
-	},
-	openLoginPopup() {
-		this.setData({ isLoginPopup: true });
 	},
 	fetchData: function (id) {
 		var self = this;
@@ -208,7 +172,7 @@ Page({
 
 			self.setData({
 				pageData: response.data,
-				// wxParseData: WxParse('md',response.data.content.rendered)
+				//wxParseData: WxParse('md',response.data.content.rendered)
 				//wxParseData: WxParse.wxParse('article', 'html', response.data.content.rendered, self, 5)
 			});
 			self.setData({
@@ -217,7 +181,7 @@ Page({
 		})
 			.then(res => {
 				if (!app.globalData.isGetOpenid) {
-					// auth.getUsreInfo();
+					// auth.getUserInfo();
 				}
 			})
 	}

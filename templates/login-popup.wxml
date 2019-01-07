@@ -1,15 +1,25 @@
-<!--templates/login-popup.wxml-->
 <import src="login.wxml" />
-
 <template name="login-popup">
-    <view class="zan-popup zan-popup--center login-popup {{show ? 'zan-popup--show' : ''}}">
-        <!-- 遮罩层 -->
-        <view class="zan-popup__mask" bindtap="closeLoginPopup"></view>
-        <!-- 弹出层内容 -->
-        <view class="zan-popup__container">
-            <view class="login-popup-wrapper">
-				<template is="login" data="{{userInfo: userInfo}}"></template>
-            </view>
-        </view>
+    <view class="login-popup">
+		<view class="login-popup-wrapper">
+			<block wx:if="{{userInfo == null || userInfo == ''}}">
+				<button class="login-btn" open-type="getUserInfo" bindgetuserinfo="agreeGetUser">
+					<view class="login-inner">
+						<image class="avatar" src="../../images/gravatar.png"></image>
+						<view class="username">
+							<text>请点击登录</text>
+						</view>
+					</view>
+				</button>
+			</block>
+			<block wx:else>
+				<view class="login-inner">
+					<image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+					<view class="username">
+						<text>{{userInfo.nickName}}</text>
+					</view>
+				</view>
+			</block>
+		</view>
     </view>
 </template>

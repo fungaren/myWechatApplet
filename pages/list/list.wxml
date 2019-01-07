@@ -14,58 +14,44 @@
 <import src="../../templates/copyright.wxml" />
 
 <scroll-view style="height:100%;" scroll-y="true" lower-threshold="100rpx">
+	<!-- 分类查看 -->
     <view class="topic-common-list" style="display:{{isCategoryPage}}">
-    	<view class="topic-list-item">
-			<image src="{{categoriesImage}}" class="cover"></image>
-			<view class="topic-content-title">
-				<text>{{categoriesList.name}}</text>
-			</view>
-			<view class="topic-content-title-line"></view>
-			<view class="topic-content-brief">
-				<text>{{categoriesList.description}}</text>
-			</view>
-    	</view>
+		<view class="topic-content-title">
+			<text>{{category.name}}</text>
+		</view>
+		<view class="topic-content-brief">
+			<text>{{category.description}}</text>
+		</view>
     </view>
-
+	<!-- 搜索结果 -->
     <view class="topic-common-list" style="display:{{isSearchPage}}">
-    	<view class="topic-list-item">
-			<view>
-				<image src="../../images/website-search.png" class="cover"></image>
-			</view>
-			<view class="topic-content-title">
-				<text>搜索关键字：</text>
-				<text class="searchKey">{{searchKey}}</text>
-			</view>
-			<view class="topic-content-title-line"></view>
-			<view class="topic-content-brief">
-				<text>本搜索是全文搜索</text>
-			</view>
-    	</view>
+		<view class="topic-content-title">
+			<text>搜索关键字：</text>
+			<text class="searchKey">{{searchKey}}</text>
+		</view>
+		<view class="topic-content-brief">
+			<text>本搜索是全文搜索</text>
+		</view>
     </view>
 
 	<view class="container">
 		<view class="showerror" style="display:{{showerror}}">
-			<view class="errortext">
-				暂时无法访问网络
-				<view class="">
-					<button class="more-button" bindtap="reload" size="mini" bindtap="reload">重新加载</button>
-				</view>
-			</view>
+			<view class="errortext">暂时无法访问网络</view>
 		</view>
 
 		<view style="display:{{showallDisplay}}">
+
+			<!-- 文章列表模板 -->
 			<template is="tempCommonList" data="{{postsList}}" />
-			<view class="loadingmore" style="display:{{floatDisplay}}">
-				<!--
+			
+			<view class="loadMore">
 				<view hidden="{{isLastPage}}">
-					<button class="more-button" formType="submit" size="mini" bindtap="loadMore">加载更多...</button>
-				</view> -->
+					<button class="more-button" size="mini" bindtap="loadMore">加载更多</button>
+				</view>
 				<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>
 			</view>
 		</view>
-
-		<view class="copyright" style="display:{{floatDisplay}}">
-			<template is="tempCopyright" />
-		</view>
+		
+		<template is="tempCopyright" />
 	</view>
 </scroll-view>

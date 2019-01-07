@@ -107,9 +107,6 @@ function wxNavigateTo(url, params) {
 
 import config from 'config.js'
 var domain = config.getDomain;
-var pageCount = config.getPageCount;
-var categoriesID = config.getCategoriesID;
-var indexListType = config.getIndexListType;
 var HOST_URI = 'https://' + domain + '/wp-json/wp/v2/';
 var HOST_URI_WATCH_LIFE_JSON = 'https://' + domain + '/wp-json/watch-life-net/v1/';
 
@@ -120,60 +117,50 @@ module.exports = {
 	wxLogin: wxLogin,
 	wxGetUserInfo: wxGetUserInfo,
 	wxGetSystemInfo: wxGetSystemInfo,
-	
+
 	// 获取文章列表数据
 	getPosts: function (obj) {
-		var url = HOST_URI + 'posts?per_page=' + pageCount + '&orderby=date&order=desc&page=' + obj.page;
-		if (obj.categories != 0) {
-			url += '&categories=' + obj.categories;
+		var url = HOST_URI + 'posts?per_page=' + config.getPageCount + '&orderby=date&order=desc&page=' + obj.page;
+		if (typeof (obj.category) != 'undefined' &&
+			typeof (obj.category.id) != 'undefined' && 
+			obj.category.id != 0) {
+			url += '&categories=' + obj.category.id;
 		}
-		else if (obj.search != '') {
-			url += '&search=' + encodeURIComponent(obj.search);
+		else if (typeof (obj.searchKey) != 'undefined' && 
+				obj.searchKey != '') {
+			url += '&search=' + encodeURIComponent(obj.searchKey);
 		}
-		else {
-			if (indexListType != 'all') {
-				url += '&categories=' + indexListType;
-			}
+		else if (config.getIndexListType != 'all') {
+			url += '&categories=' + config.getIndexListType;
 		}
+		console.log(url)
 		return url;
 	},
 
 	// 获取多个分类文章列表数据
 	getPostsByCategories: function (categories) {
-		var url = HOST_URI + 'posts?per_page=20&orderby=date&order=desc&page=1&categories=' + categories;
-		return url;
+		return HOST_URI + 'posts?per_page=20&orderby=date&order=desc&page=1&categories=' + categories;
 	},
 
-	// 获取置顶的文章
-	getStickyPosts: function () {
-		var url = HOST_URI + 'posts?sticky=true&per_page=5&page=1';
-		return url;
-	},
+	// // 获取置顶的文章
+	// getStickyPosts: function () {
+	// 	return HOST_URI + 'posts?sticky=true&per_page=5&page=1';
+	// },
 
 	//获取是否开启评论的设置
 	getEnableComment: function () {
-		var url = HOST_URI_WATCH_LIFE_JSON;
-		url += 'options/enableComment';
-		return url;
+		return HOST_URI_WATCH_LIFE_JSON + 'options/enableComment';
 	},
 
-	// 获取tag相关的文章列表
-	getPostsByTags: function (id, tags) {
-		var url = HOST_URI + 'posts?per_page=5&&page=1&exclude=' + id + "&tags=" + tags;
-		return url;
-	},
+	// // 获取tag相关的文章列表
+	// getPostsByTags: function (id, tags) {
+	// 	return HOST_URI + 'posts?per_page=5&&page=1&exclude=' + id + "&tags=" + tags;
+	// },
 
-	// 获取特定id的文章列表
-	getPostsByIDs: function (obj) {
-		var url = HOST_URI + 'posts?include=' + obj;
-		return url;
-	},
-
-	// 获取特定slug的文章内容
-	getPostBySlug: function (obj) {
-		var url = HOST_URI + 'posts?slug=' + obj;
-		return url;
-	},
+	// // 获取特定id的文章列表
+	// getPostsByIDs: function (obj) {
+	// 	return HOST_URI + 'posts?include=' + obj;
+	// },
 
 	// 获取内容页数据
 	getPostByID: function (id) {
@@ -192,33 +179,28 @@ module.exports = {
 
 	//获取分类列表
 	getCategories: function () {
-		var url = '';
-		if (categoriesID == 'all') {
-			url = HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
+		if (config.getCategoriesID == 'all') {
+			return HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
 		}
 		else {
-			url = HOST_URI + 'categories?include=' + categoriesID + '&orderby=count&order=desc';
+			return HOST_URI + 'categories?include=' + config.getCategoriesID + '&orderby=count&order=desc';
 		}
-		return url
 	},
 
 	// 获取某个分类信息
 	getCategoryByID: function (id) {
-		var dd = HOST_URI + 'categories/' + id;
 		return HOST_URI + 'categories/' + id;
 	},
 
 	// 获取某文章评论
 	getComments: function (obj) {
-		var url = HOST_URI + 'comments?per_page=100&orderby=date&order=asc&post=' + obj.postID + '&page=' + obj.page;
-		return url;
+		return HOST_URI + 'comments?per_page=100&orderby=date&order=asc&post=' + obj.postID + '&page=' + obj.page;
 	},
 
 	// 获取文章评论及其回复
 	getCommentsReplay: function (obj) {
-		var url = HOST_URI_WATCH_LIFE_JSON;
-		url += 'comment/getcomments?postid=' + obj.postId + '&limit=' + obj.limit + '&page=' + obj.page + '&order=desc';
-		return url;
+		return HOST_URI_WATCH_LIFE_JSON + 'comment/getcomments?postid=' +
+			obj.postId + '&limit=' + obj.limit + '&page=' + obj.page + '&order=desc';
 	},
 
 	// 获取网站的最新20条评论
@@ -228,14 +210,13 @@ module.exports = {
 
 	// 获取回复
 	getChildrenComments: function (obj) {
-		var url = HOST_URI + 'comments?parent_exclude=0&per_page=100&orderby=date&order=desc&post=' + obj.postID
-		return url;
+		return HOST_URI + 'comments?parent_exclude=0&per_page=100&orderby=date&order=desc&post=' + obj.postID
 	},
 
-	//获取最近的30个评论
-	getRecentfiftyComments: function () {
-		return HOST_URI + 'comments?per_page=30&orderby=date&order=desc'
-	},
+	// //获取最近的30个评论
+	// getRecentfiftyComments: function () {
+	// 	return HOST_URI + 'comments?per_page=30&orderby=date&order=desc'
+	// },
 
 	// 提交评论
 	postComment: function () {
@@ -244,45 +225,21 @@ module.exports = {
 
 	// 提交微信评论
 	postWeixinComment: function () {
-		var url = HOST_URI_WATCH_LIFE_JSON;
-		return url + 'comment/add'
+		return HOST_URI_WATCH_LIFE_JSON + 'comment/add'
 	},
 
 	// 获取微信评论
 	getWeixinComment: function (openid) {
-		var url = HOST_URI_WATCH_LIFE_JSON;
-		return url + 'comment/get?openid=' + openid;
-	},
-
-	// 获取文章的第一个图片地址,如果没有给出默认图片
-	getContentFirstImage: function (content) {
-		var regex = /<img.*?src=[\'"](.*?)[\'"].*?>/i;
-		var arrReg = regex.exec(content);
-		var src = "../../images/logo700.png";
-		if (arrReg) {
-			src = arrReg[1];
-		}
-		return src;
+		return HOST_URI_WATCH_LIFE_JSON + 'comment/get?openid=' + openid;
 	},
 
 	// 更新文章浏览数
 	updatePageviews(id) {
-		var url = HOST_URI_WATCH_LIFE_JSON;
-		url += "post/addpageview/" + id;
-		return url;
+		return HOST_URI_WATCH_LIFE_JSON + "post/addpageview/" + id;
 	},
 
 	// 获取用户openid
 	getOpenidUrl(id) {
-		var url = HOST_URI_WATCH_LIFE_JSON;
-		url += "weixin/getopenid";
-		return url;
-	},
-
-	// 发送模版消息
-	sendMessagesUrl() {
-		var url = HOST_URI_WATCH_LIFE_JSON;
-		url += "weixin/sendmessage";
-		return url;
+		return HOST_URI_WATCH_LIFE_JSON += "weixin/getopenid";
 	}
 };

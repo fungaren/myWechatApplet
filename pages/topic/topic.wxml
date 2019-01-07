@@ -1,33 +1,27 @@
+
 <import src="../../templates/copyright.wxml" />
 <import src="../../templates/login-popup.wxml" />
-
 <scroll-view style="height:100%;" scroll-y="true" lower-threshold="100rpx">
     <view class="topic-common-list">
         <block wx:key="id" wx:for="{{categoriesList}}">
             <view class="list-item">
+				<!-- 分类图标 -->
                 <view>
-                    <image src="{{item.category_thumbnail_image}}" class="cover" data-item="{{item.name}}" data-id="{{item.id}}" bindtap="redictIndex"></image>
+                    <image src="{{item.category_thumbnail_image}}" class="cover" data-item="{{item.name}}" data-id="{{item.id}}" bindtap="listAll"></image>
                 </view>
-                <view class="content-title" data-item="{{item.name}}" data-id="{{item.id}}" bindtap="redictIndex">
-                    <view class="topic-name">
-                        <text>{{item.name}}</text>
-                    </view>
-                    <view class="topic-img">
-                        <image src="../../images/{{item.subimg}}" data-subflag="{{item.subflag}}" data-id="{{item.id}}" catchtap="postsub" class="img-menu"></image>
-                    </view>
+				<!-- 分类名称 -->
+                <view class="content-title" data-item="{{item.name}}" data-id="{{item.id}}" bindtap="listAll">
+                    <text>{{item.name}}</text>
                 </view>
+				<!-- 分类描述 -->
                 <view class="content-brief" data-item="{{item.name}}" data-id="{{item.id}}">
                     <text>{{item.description}}</text>
                 </view>
-
-
             </view>
-
         </block>
     </view>
 </scroll-view>
- <template is="login-popup" data="{{show: isLoginPopup, userInfo: userInfo}}"></template>
-     
-<view class="copyright" style="display:{{floatDisplay}}">
-    <template is="tempCopyright" />
-</view>
+
+<template is="login-popup" data="{{userInfo: userInfo}}"></template>
+
+<template is="tempCopyright" />

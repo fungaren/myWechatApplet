@@ -49,7 +49,7 @@ function getDateDiff(dateStr) {
 		H = date.getHours(),
 		m = date.getMinutes(),
 		s = date.getSeconds();
-	//小于10的在前面补0
+	// 小于10的在前面补0
 	if (M < 10) {
 		M = '0' + M;
 	}
@@ -97,10 +97,7 @@ function getDateOut(dateStr) {
 	var result = false;
 	var d = timeNow - publishTime;
 	var d_days = parseInt(d / 86400);
-	if (d_days > 7) {
-		result = true;
-	}
-	return result;
+	return d_days > 7;
 }
 
 function cutstr(str, len, flag) {
@@ -112,21 +109,18 @@ function cutstr(str, len, flag) {
 		var a = str.charAt(i);
 		str_length++;
 		if (escape(a).length > 4) {
-			//中文字符的长度经编码之后大于4  
+			// 中文字符的长度经编码之后大于4  
 			str_length++;
 		}
 		str_cut = str_cut.concat(a);
 		if (str_length >= len) {
 			if (flag == 0) {
 				str_cut = str_cut.concat("...");
-
 			}
-
 			return str_cut;
 		}
-
 	}
-	//如果给定字符串小于指定长度，则返回源字符串；  
+	// 如果给定字符串小于指定长度，则返回源字符串
 	if (str_length < len) {
 		return str;
 	}
@@ -134,7 +128,7 @@ function cutstr(str, len, flag) {
 
 function removeHTML(s) {
 	var str = s.replace(/<\/?.+?>/g, "");
-	str = str.replace(/[\r\n]/g, ""); //去掉回车换行    
+	str = str.replace(/[\r\n]/g, ""); // 去掉回车换行    
 	return str.replace(/ /g, "");
 }
 
@@ -169,32 +163,12 @@ function checkImgType(filePath) {
 	}
 }
 
-// 是否为空对象
-function isEmptyObject(e) {
-	var t;
-	for (t in e)
-		return !1;
-	return !0
-}
-
 function CheckImgExists(imgurl) {
-	var ImgObj = new Image(); //判断图片是否存在  
+	var ImgObj = new Image(); // 判断图片是否存在  
 	ImgObj.src = imgurl;
-	//没有图片，则返回-1
+	// 没有图片，则返回-1
 	return (ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0))
 }
-
-function GetUrlFileName(url, domain) {
-	var filename = url.substring(url.lastIndexOf("/") + 1);
-	if (filename == domain || filename == '') {
-		filename = "index";
-	}
-	else {
-		filename = filename.substring(0, filename.lastIndexOf("."));
-	}
-	return filename;
-}
-
 
 function json2Form(json) {
 	var str = [];
@@ -219,18 +193,18 @@ function getymd(dateStr, type) {
 	}
 }
 
-//绘制文字：文章题目、摘要、扫码阅读
+// 绘制文字：文章题目、摘要、扫码阅读
 function drawTitleExcerpt(context, title, excerpt) {
 	context.setFillStyle("#000000");
 	context.setTextAlign('left');
 
 	if (getStrLength(title) <= 14) {
-		//14字以内绘制成一行，美观一点
+		// 14字以内绘制成一行，美观一点
 		context.setFontSize(40);
 		context.fillText(title, 40, 460);
 	}
 	else {
-		//题目字数很多的，只绘制前36个字（如果题目字数在15到18个字则也是一行，不怎么好看）
+		// 题目字数很多的，只绘制前36个字（如果题目字数在15到18个字则也是一行，不怎么好看）
 		context.setFontSize(30);
 		context.fillText(title.substring(0, 19), 40, 460);
 		context.fillText(title.substring(19, 36), 40, 510);
@@ -241,7 +215,7 @@ function drawTitleExcerpt(context, title, excerpt) {
 	context.setGlobalAlpha(0.7);
 
 	for (var i = 0; i <= 50; i += 20) {
-		//摘要只绘制前50个字，这里是用截取字符串
+		// 摘要只绘制前50个字，这里是用截取字符串
 		if (getStrLength(excerpt) > 50) {
 			if (i == 40)
 				context.fillText(excerpt.substring(i, i + 20) + "...", 40, 570 + i * 2);
@@ -256,6 +230,7 @@ function drawTitleExcerpt(context, title, excerpt) {
 	context.stroke();
 	context.save();
 }
+
 module.exports = {
 	formatTime: formatTime,
 	getDateDiff: getDateDiff,
@@ -264,9 +239,7 @@ module.exports = {
 	formatDateTime: formatDateTime,
 	compare: compare,
 	checkImgType: checkImgType,
-	isEmptyObject: isEmptyObject,
 	CheckImgExists: CheckImgExists,
-	GetUrlFileName: GetUrlFileName,
 	json2Form: json2Form,
 	getymd: getymd,
 	getDateOut: getDateOut,
