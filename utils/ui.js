@@ -11,13 +11,6 @@ module.exports = {
 			category: []
 		});
 		Api.getRequest(Api.getCategoryByID(id)).then(response => {
-			var catImage = "";
-			if (typeof (response.data.category_thumbnail_image) == "undefined" || response.data.category_thumbnail_image == "") {
-				catImage = "../../images/website.png";
-			}
-			else {
-				catImage = response.data.category_thumbnail_image;
-			}
 			page.setData({
 				category: response.data
 			});
@@ -58,11 +51,6 @@ module.exports = {
 				page.setData({
 					floatDisplay: "block",
 					postsList: page.data.postsList.concat(response.data.map(function (item) {
-						if (item.category_name != null)
-							item.categoryImage = "../../images/category.png";
-						else
-							item.categoryImage = "";
-
 						// 获取文章的第一个图片地址,如果没有给出默认图片
 						var featureImage = item.content.rendered.match(/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/);
 						if (featureImage != null)
@@ -72,6 +60,8 @@ module.exports = {
 						
 						// 时间戳，只取年、月、日部分
 						item.date = item.date.substring(0, 10);
+						item.commentCount = '0 条';
+						item.views = '0 次';
 						// 标题中的HTML转义
 						item.title.rendered = WxParse.htmlDecode(item.title.rendered)
 						return item;
@@ -97,6 +87,7 @@ module.exports = {
 					// 其他错误
 					wx.showToast({
 						title: response.data.message,
+						icon: 'none',
 						duration: 1500
 					})
 				}
@@ -110,11 +101,11 @@ module.exports = {
 				});
 			}
 			else {
-				wx.showModal({
-					title: '加载失败',
-					content: '加载数据失败，请重试',
-					showCancel: false,
-				});
+				wx.showToast({
+					title: '加载失败，请重试',
+					icon: 'none',
+					duration: 2000
+				})
 				page.setData({
 					page: data.page - 1
 				});
@@ -128,51 +119,62 @@ module.exports = {
 
 	// 获取页面内容
 	fetchPageData: function (page, id) {
+		wx.showLoading({
+			title: '正在加载',
+			mask: true
+		});
 		Api.getRequest(Api.getPageByID(id)).then(response => {
 			// 解析HTML数据
 			WxParse.wxParse('article', 'html', response.data.content.rendered, page, 5);
 			page.setData({
 				displayContent: 'block'
 			});
+		})
+		.finally(function (response) {
+			wx.hideLoading();
 		});
 	},
 	// 获取文章内容
 	fetchPostData: function (page, id) {
 		var self = this;
+		wx.showLoading({
+			title: '正在加载',
+			mask: true
+		});
 		Api.getRequest(Api.getPostByID(id)).then(response => {
-			// 标题中的HTML转义
-			response.data.title.rendered = WxParse.htmlDecode(response.data.title.rendered)
+			// 解析正文
 			WxParse.wxParse('article', 'html', response.data.content.rendered, page, 5);
-			if (response.data.total_comments != null && response.data.total_comments != '') {
-				page.setData({
-					commentCount: "有" + response.data.total_comments + "条评论"
-				});
-			};
 			page.setData({
-				detail: response.data,
-				postId: id,
+				// 标题中的HTML转义
+				title: WxParse.htmlDecode(response.data.title.rendered),
+				//postId: id,
+				commentCount: '0条评论',
 				date: response.data.date.substring(0, 10),
-				displayContent: 'block',
+				categoryName: response.data.categories.toString(),
+				views: '0次阅读',
+				displayContent: 'block'
 			});
 		})
 		.then(response => {
 			// 设置标题
 			wx.setNavigationBarTitle({
-				title: page.data.detail.title.rendered
+				title: page.data.title
 			});
+		})
+		.finally(function (response) {
+			wx.hideLoading();
 		});
 	},
 	onClickHyperLink: function (href) {
 		// 站外链接
 		if (href.indexOf(config.getDomain) == -1) {
 			wx.setClipboardData({
-				data: url,
+				data: href,
 				success: function (res) {
 					wx.getClipboardData({
 						success: function (res) {
 							wx.showToast({
 								title: '链接已复制',
-								image: '../../images/link.png',
 								duration: 2000
 							})
 						}

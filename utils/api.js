@@ -1,13 +1,4 @@
-/*
- * 
- * WordPres版微信小程序
- * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
- */
+
 // 利用这个包装，可以把 success 和 fail 的结果都返回
 function wxPromisify(fn) {
 	return function (obj = {}) {
@@ -40,6 +31,7 @@ Promise.prototype.finally = function (callback) {
  */
 function getRequest(url, data) {
 	var getRequest = wxPromisify(wx.request)
+	console.log(url)
 	return getRequest({
 		url: url,
 		method: 'GET',
@@ -57,6 +49,7 @@ function getRequest(url, data) {
  */
 function postRequest(url, data) {
 	var postRequest = wxPromisify(wx.request)
+	console.log(url)
 	return postRequest({
 		url: url,
 		method: 'POST',
@@ -129,10 +122,6 @@ module.exports = {
 				obj.searchKey != '') {
 			url += '&search=' + encodeURIComponent(obj.searchKey);
 		}
-		else if (config.getIndexListType != 'all') {
-			url += '&categories=' + config.getIndexListType;
-		}
-		console.log(url)
 		return url;
 	},
 
@@ -173,12 +162,7 @@ module.exports = {
 
 	//获取分类列表
 	getCategories: function () {
-		if (config.getCategoriesID == 'all') {
-			return HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
-		}
-		else {
-			return HOST_URI + 'categories?include=' + config.getCategoriesID + '&orderby=count&order=desc';
-		}
+		return HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
 	},
 
 	// 获取某个分类信息

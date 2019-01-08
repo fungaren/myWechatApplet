@@ -1,14 +1,4 @@
-/*
- * 
- * WordPres版微信小程序
- * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- *  *Copyright (c) 2017 https://www.watch-life.net All rights reserved.
- * 
- */
+
 import config from '../../utils/config.js'
 var Ui = require('../../utils/ui.js');
 var app = getApp();
@@ -16,7 +6,9 @@ var app = getApp();
 Page({
     data: {
         title: '文章内容',
-        detail: {},
+		//postId: 0,
+        categoryName: '',
+		views: '',
 		commentCount: '',
         date: '',
 		displayContent: 'none'
@@ -73,5 +65,13 @@ Page({
 		this.setData({
 			userInfo: app.globalData.userInfo
 		})
-    }
+    },
+	// 用户评论
+	formSubmit: function (e) {
+		wx.showToast({
+			title: '暂不支持评论',
+			icon: 'none',
+			duration: 2000
+		});
+	}
 })
