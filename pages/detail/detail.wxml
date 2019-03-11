@@ -1,50 +1,29 @@
-
-
 <import src="../../wxParse/wxParse.wxml" />
 <import src="../../templates/copyright.wxml" />
-<import src="../../templates/loading.wxml" />
-<import src="../../templates/login-popup.wxml" />
+<view class="container" hidden="{{showerror}}">
+	<!-- 标题 -->
+	<view class="entry-title">{{title}}</view>
+	<!-- 日期、分类、评论数、阅读数 -->
+	<view class="entry-date">
+		<image src="../../images/calendar.png"></image>
+		<text class="entry-date-text">{{date}}</text>
 
-<view class="container">
-    <view class="container" style="display:{{displayContent}}">
-        <view class="content-article-detail">
-			<!-- 标题 -->
-            <view class="entry-title">{{title}}</view>
-			<!-- 日期、分类、评论数、阅读数 -->
-            <view class="entry-date">
-                <image src="../../images/calendar.png"></image>
-                <text class="entry-date-text">{{date}}</text>
+		<image src="../../images/category.png"></image>
+		<text class="entry-icon-text">{{categoryName}}</text>
 
-				<image src="../../images/category.png"></image>
-				<text class="entry-icon-text">{{categoryName}}</text>
+		<image src="../../images/comments.png"></image>
+		<text class="entry-icon-text">{{commentCount}}</text>
 
-                <image src="../../images/comments.png"></image>
-                <text class="entry-icon-text">{{commentCount}}</text>
+		<image src="../../images/pageviews.png"></image>
+		<text class="entry-icon-text">{{views}}</text>
+	</view>
+	<!-- 内容 -->
+	<view class="entry-summary">
+		<template is="wxParse" data="{{wxParseData: article.nodes}}" />
+	</view>
 
-                <image src="../../images/pageviews.png"></image>
-                <text class="entry-icon-text">{{views}}</text>
-            </view>
-			<!-- 内容 -->
-            <view class="entry-summary">
-                <template is="wxParse" data="{{wxParseData: article.nodes}}" />
-			</view>
-        </view>
-       
-        <template is="login-popup" data="{{userInfo: userInfo}}"></template>
-        <template is="tempCopyright" />
-
-        <!-- 填写评论 -->
-		<view class="comment-fixed">
-			<form catchsubmit="formSubmit" report-submit="true">
-				<!-- 文章id -->
-				<input class="comment-input" maxlength="200" name="inputPostId" value="{{detail.id}}" style="display:none" />
-				<!-- 评论框 -->
-				<view class="comment-box">
-					<image src="../../images/tar-home.png" class="goHome" catchtap="goHome" />
-					<input class="comment-input" type='text' confirm-type="send" cursor-spacing="10" maxlength="100" name="inputComment" value="{{content}}" placeholder="{{placeholder}}" focus="{{focus}}" bindblur="onReplyBlur" bindfocus="onRepleyFocus" />
-					<button class="comment-button touch-active" formType="submit">发送</button>
-				</view>
-			</form>
-		</view>
-    </view>
+	<view class="praisePost" style='text-align:center'>
+		<button class="praise-button" formType="submit" size="mini" bindtap="onPraise">捐赠</button>
+	</view>
+	<template is="copyright" />
 </view>

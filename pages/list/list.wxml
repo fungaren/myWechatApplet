@@ -1,10 +1,9 @@
-
 <import src="../../templates/articlesList.wxml" />
 <import src="../../templates/copyright.wxml" />
 
 <scroll-view style="height:100%;" scroll-y="true" lower-threshold="100rpx">
 	<!-- 分类查看 -->
-    <view class="topic-common-list" style="display:{{isCategoryPage}}">
+    <view class="topic-common-list" hidden="{{!isCategoryPage}}">
 		<view class="topic-content-title">
 			<text>{{category.name}}</text>
 		</view>
@@ -13,7 +12,7 @@
 		</view>
     </view>
 	<!-- 搜索结果 -->
-    <view class="topic-common-list" style="display:{{isSearchPage}}">
+    <view class="topic-common-list" hidden="{{!isSearchPage}}">
 		<view class="topic-content-title">
 			<text>搜索关键字：</text>
 			<text class="searchKey">{{searchKey}}</text>
@@ -23,24 +22,15 @@
 		</view>
     </view>
 
-	<view class="container">
-		<view class="showerror" style="display:{{showerror}}">
-			<view class="errortext">暂时无法访问网络</view>
+	<view class="showerror" hidden="{{!showerror}}">暂时无法访问网络</view>
+	
+	<view style="display:{{showallDisplay}}" hidden="{{showerror}}">
+		<!-- 文章列表模板 -->
+		<template is="articlesList" data="{{postsList}}" />
+		<view class="loadMore">
+			<button hidden="{{isLastPage}}" size="mini" bindtap="loadMore">加载更多</button>
+			<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>
 		</view>
-
-		<view style="display:{{showallDisplay}}">
-
-			<!-- 文章列表模板 -->
-			<template is="articlesList" data="{{postsList}}" />
-			
-			<view class="loadMore">
-				<view hidden="{{isLastPage}}">
-					<button class="more-button" size="mini" bindtap="loadMore">加载更多</button>
-				</view>
-				<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>
-			</view>
-		</view>
-		
-		<template is="tempCopyright" />
 	</view>
+	<template is="copyright" />
 </scroll-view>

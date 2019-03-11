@@ -1,119 +1,160 @@
-
-var Api = require('api.js');
 var WxParse = require('../wxParse/wxParse.js');
-import config from 'config.js'
+var Decode = require('decode.js')
 var app = getApp();
 
+var domain = app.conf.domain;
+var HOST_URI = 'https://' + domain + '/wp-json/wp/v2/';
+
 module.exports = {
-	// 获取指定分类id下的所有文章
-	fetchCategoryPosts: function (page, id) {
-		page.setData({
-			category: []
+	// 获取多个分类文章列表数据
+	// HOST_URI + 'posts?per_page=20&orderby=date&order=desc&page=1&categories=' + categories
+
+	// 获取置顶的文章
+	// HOST_URI + 'posts?sticky=true&per_page=5&page=1'
+
+	// 获取tag相关的文章列表
+	// HOST_URI + 'posts?per_page=5&&page=1&exclude=' + id + "&tags=" + tags
+
+	// 获取特定id的文章列表
+	// HOST_URI + 'posts?include=' + obj
+
+	// 获取某文章评论
+	// HOST_URI + 'comments?per_page=100&orderby=date&order=asc&post=' + obj.postId + '&page=' + obj.page
+
+	// 获取网站的最新20条评论
+	// HOST_URI + 'comments?parent=0&per_page=20&orderby=date&order=desc'
+
+	// 获取回复
+	// return HOST_URI + 'comments?parent_exclude=0&per_page=100&orderby=date&order=desc&post=' + obj.postId
+
+	// 获取最近的30个评论
+	// HOST_URI + 'comments?per_page=30&orderby=date&order=desc'
+
+	// 获取所有分类
+	getCategories: function (page) {
+		wx.showLoading({
+			title: '正在加载',
+			mask: true
 		});
-		Api.getRequest(Api.getCategoryByID(id)).then(response => {
-			page.setData({
-				category: response.data
-			});
-			wx.setNavigationBarTitle({
-				title: response.data.name,
-				success: function (res) {
-					// success
+		var self = page;
+		var url = HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
+		console.log(url);
+		wx.request({
+			url: url,
+			success: res => {
+				wx.hideLoading();
+				console.log(res);
+				if (res.statusCode === 200) {
+					// 创建一个从分类Id到分类信息的映射
+					for (var i=0; i < res.data.length; ++i)
+						app.globalData.categoriesList[res.data[i].id] = res.data[i];
 				}
-			});
-			this.fetchPostsData(page, page.data);
-		})
+			},
+			fail: res => {
+				wx.hideLoading();
+				console.log(res);
+			}
+		});
 	},
 
-	// 获取文章列表数据
+	// 获取文章列表数据（首页列表、搜索列表、分类列表）
 	fetchPostsData: function (page, data) {
 		if (!data) data = {};
 		if (!data.page) data.page = 1;
 		if (!data.category) data.category = {id: 0, name: ''};
 		if (!data.searchKey) data.search = '';
 		if (data.page === 1) {
-			page.setData({
-				postsList: []
-			});
+			page.data.postsList = [];
 		};
 		wx.showLoading({
 			title: '正在加载',
 			mask: true
 		});
-		Api.getRequest(Api.getPosts(data)).then(response => {
-			if (response.statusCode === 200) {
-				// 返回的文章数量小于每页的文章数
-				if (response.data.length < config.getPageCount) {
+		var url = HOST_URI + 'posts?per_page=' + app.conf.pageCount + '&orderby=date&order=desc&page=' + data.page;
+		if (typeof (data.category) != 'undefined' &&
+			typeof (data.category.id) != 'undefined' &&
+			data.category.id != 0) {
+			url += '&categories=' + data.category.id;
+		}
+		else if (typeof (data.searchKey) != 'undefined' &&
+			data.searchKey != '') {
+			url += '&search=' + encodeURIComponent(data.searchKey);
+		}
+		console.log(url);
+		wx.request({
+			url: url,
+			success: res => {
+				console.log(res);
+				if (res.statusCode === 200) {
+					// 返回的文章数量小于每页的文章数
+					if (res.data.length < app.conf.pageCount) {
+						page.isLastPage = true;
+					}
+					// 显示文章列表
 					page.setData({
-						isLastPage: true
+						showerror: false,
+						postsList: page.data.postsList.concat(res.data.map(item => {
+							// 标题中的HTML转义
+							item.title.rendered = Decode.htmlDecode(item.title.rendered)
+
+							// 获取文章的第一个图片地址,如果没有给出默认图片
+							var featureImage = item.content.rendered.match(/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/);
+							if (featureImage != null)
+								item.post_thumbnail_image = featureImage[1];
+							else
+								item.post_thumbnail_image = "../../images/default-thumbnail.png";
+
+							// 时间戳，只取年、月、日部分
+							item.date = item.date.substring(0, 10);
+							item.commentCount = '0 条';
+							item.views = '0 次';
+							return item;
+						}))
 					});
+					setTimeout(() => {
+						wx.hideLoading();
+					}, 900);
+				} else {
+					// 达到最大页数
+					if (res.data.code == "rest_post_invalid_page_number") {
+						page.setData({
+							isLastPage: true
+						});
+						wx.showToast({
+							title: '没有更多内容',
+							mask: false,
+							duration: 1500
+						});
+					} else {
+						// 其他错误
+						wx.showToast({
+							title: res.data.message,
+							icon: 'none',
+							duration: 1500
+						});
+					}
 				}
-				// 显示文章列表
-				page.setData({
-					floatDisplay: "block",
-					postsList: page.data.postsList.concat(response.data.map(function (item) {
-						// 获取文章的第一个图片地址,如果没有给出默认图片
-						var featureImage = item.content.rendered.match(/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/);
-						if (featureImage != null)
-							item.post_thumbnail_image = featureImage[1];
-						else
-							item.post_thumbnail_image = "../../images/default-thumbnail.png";
-						
-						// 时间戳，只取年、月、日部分
-						item.date = item.date.substring(0, 10);
-						item.commentCount = '0 条';
-						item.views = '0 次';
-						// 标题中的HTML转义
-						item.title.rendered = WxParse.htmlDecode(item.title.rendered)
-						return item;
-					})),
-				});
-				setTimeout(function () {
-					wx.hideLoading();
-				}, 900);
-			}
-			else {
-				// 达到最大页数
-				if (response.data.code == "rest_post_invalid_page_number") {
-					page.setData({
-						isLastPage: true
-					});
-					wx.showToast({
-						title: '没有更多内容',
-						mask: false,
-						duration: 1500
-					});
-				}
-				else {
-					// 其他错误
-					wx.showToast({
-						title: response.data.message,
-						icon: 'none',
-						duration: 1500
-					})
-				}
-			}
-		})
-		.catch(function (response) {
-			if (data.page == 1) {
-				page.setData({
-					showerror: "block",
-					floatDisplay: "none"
-				});
-			}
-			else {
+				wx.stopPullDownRefresh();
+			},
+			fail: res => {
+				console.log(res);
 				wx.showToast({
 					title: '加载失败，请重试',
 					icon: 'none',
 					duration: 2000
-				})
-				page.setData({
-					page: data.page - 1
 				});
+				if (data.page == 1) {
+					page.setData({
+						showerror: true
+					});
+				} else {
+					page.setData({
+						page: data.page - 1,
+						showerror: true
+					});
+				}
+				wx.stopPullDownRefresh();
 			}
-		})
-		.finally(function (response) {
-			wx.hideLoading();
-			wx.stopPullDownRefresh();
 		});
 	},
 
@@ -123,17 +164,29 @@ module.exports = {
 			title: '正在加载',
 			mask: true
 		});
-		Api.getRequest(Api.getPageByID(id)).then(response => {
-			// 解析HTML数据
-			WxParse.wxParse('article', 'html', response.data.content.rendered, page, 5);
-			page.setData({
-				displayContent: 'block'
-			});
-		})
-		.finally(function (response) {
-			wx.hideLoading();
+		var url = HOST_URI + 'pages/' + id;
+		console.log(url);
+		wx.request({
+			url: url,
+			success: res => {
+				console.log(res);
+				WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
+				page.setData({
+					content: res.data.content.rendered,
+					showerror: false
+				});
+				wx.hideLoading();
+			},
+			fail: function (res) {
+				console.log(res);
+				wx.hideLoading();
+				page.setData({
+					showerror: true
+				});
+			}
 		});
 	},
+
 	// 获取文章内容
 	fetchPostData: function (page, id) {
 		var self = this;
@@ -141,33 +194,35 @@ module.exports = {
 			title: '正在加载',
 			mask: true
 		});
-		Api.getRequest(Api.getPostByID(id)).then(response => {
-			// 解析正文
-			WxParse.wxParse('article', 'html', response.data.content.rendered, page, 5);
-			page.setData({
-				// 标题中的HTML转义
-				title: WxParse.htmlDecode(response.data.title.rendered),
-				//postId: id,
-				commentCount: '0条评论',
-				date: response.data.date.substring(0, 10),
-				categoryName: response.data.categories.toString(),
-				views: '0次阅读',
-				displayContent: 'block'
-			});
-		})
-		.then(response => {
-			// 设置标题
-			wx.setNavigationBarTitle({
-				title: page.data.title
-			});
-		})
-		.finally(function (response) {
-			wx.hideLoading();
+		var url = HOST_URI + 'posts/' + id;
+		console.log(url);
+		wx.request({
+			url: url,
+			success: res => {
+				console.log(url);
+				WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
+				page.setData({
+					content: res.data.content.rendered,
+					// 标题中的HTML转义
+					title: Decode.htmlDecode(res.data.title.rendered),
+					commentCount: '0条评论',
+					date: res.data.date.substring(0, 10),
+					categoryName: app.globalData.categoriesList[res.data.categories].name,
+					views: '0次阅读',
+					showerror: false
+				});
+				wx.hideLoading();
+			},
+			fail: function (res) {
+				console.log(url);
+				wx.hideLoading();
+			}
 		});
 	},
+	
 	onClickHyperLink: function (href) {
 		// 站外链接
-		if (href.indexOf(config.getDomain) == -1) {
+		if (href.indexOf(app.conf.domain) == -1) {
 			wx.setClipboardData({
 				data: href,
 				success: function (res) {
@@ -181,11 +236,10 @@ module.exports = {
 					})
 				}
 			})
-		}
-		else {
+		} else {
 			// 站内链接进行跳转
 			var postId = href.substring(href.lastIndexOf("/") + 1);
-			if (postId == config.getDomain || postId == '') {
+			if (postId == app.conf.domain || postId == '') {
 				wx.switchTab({
 					url: '../index/index'
 				})
@@ -196,59 +250,5 @@ module.exports = {
 				})
 			}
 		}
-	},
-	// // 获取用户授权
-	// isAuthorized: function () {
-	// 	wx.getSetting({
-	// 		success: function success(res) {
-	// 			if (!('scope.userInfo' in res.authSetting)) {
-	// 				console.log('从未授权');
-	// 				app.globalData.isAuthorized = false;
-	// 			} else {
-	// 				if (res.authSetting['scope.userInfo'] === false) {
-	// 					console.log('用户拒绝过授权', res.authSetting);
-	// 					app.globalData.isAuthorized = false;
-	// 					wx.showModal({
-	// 						title: '用户未授权',
-	// 						content: '如需正常使用评论、点赞、赞赏等功能需授权获取用户信息。请在授权管理中启用',
-	// 						showCancel: true,
-	// 						confirmText: '设置权限',
-	// 						success: function (res) {
-	// 							if (res.confirm) {
-	// 								wx.openSetting({
-	// 									success: function success(res) {
-	// 										if (res.authSetting["scope.userInfo"] === true) {
-	// 											console.log('用户已同意授权', res.authSetting);
-	// 											app.globalData.isAuthorized = true;
-	// 										}
-	// 									}
-	// 								});
-	// 							}
-	// 						}
-	// 					});
-	// 				} else {
-	// 					console.log('用户已经授权过', res.authSetting);
-	// 					app.globalData.isAuthorized = true;
-	// 				}
-	// 			}
-	// 		}
-	// 	});
-	// },
-	// // 获取用户信息
-	// getUserInfo: function () {
-	// 	// 注意必须先调用 wx.login 之后才能 getUserInfo
-	// 	var wxLogin = Api.wxLogin();
-	// 	wxLogin().then(response => {
-	// 		var userInfo = Api.wxGetUserInfo();
-	// 		return userInfo();
-	// 	})
-	// 	.then(res => {
-	// 		console.log("成功获取用户公开信息", res.userInfo);
-	// 		// 把数据保存到全局区域以便下次读取
-	// 		app.globalData.userInfo = res.userInfo;
-	// 	})
-	// 	.catch(function (error) {
-	// 		console.error(error.errMsg);
-	// 	})
-	// }
+	}
 }

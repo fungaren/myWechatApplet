@@ -1,15 +1,17 @@
-
+page {
+	background: #eee;
+}
 .topic-common-list {
-	padding: 10rpx 0 20rpx 20rpx;
-	border-bottom: 1px solid #eee;
+	padding: 16rpx 32rpx;
 }
 .topic-content-title text {
+	color: #444;
 	font-size: 42rpx;
-	line-height: 80rpx;
+	line-height: 64rpx;
 }
 .topic-content-brief text {
-	font-size: 32rpx;
-	line-height: 64rpx;
+	color: #777;
+	font-size: 28rpx;
 }
 .searchKey {
 	color: #444;

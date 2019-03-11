@@ -1,34 +1,25 @@
-
 <import src="../../templates/articlesList.wxml" />
 <import src="../../templates/copyright.wxml" />
+<view class="showerror" hidden="{{!showerror}}">暂时无法访问网络,下拉重试...</view>
 
-<view class="showerror" style="display:{{showerror}}">
-    <view class="errortext">暂时无法访问网络,下拉重试...</view>
-</view>
-
-<view>
+<view hidden="{{showerror}}">
 	<!-- 搜索 -->
 	<form catchsubmit="searchSubmit" catchreset="formReset" id="search-form">
 		<view class="search-pancel">
 			<input name="searchKey" class="search-input" placeholder="搜索" bindsubmit="searchSubmit" />
 			<button class="search-button" form-type="submit" size="mini" plain="true">
-				<icon type="search" color="#959595" size="12" />
+				<icon type="search" color="#777" size="16" />
 			</button>
 		</view>
 	</form>
-    <view class="container">
-    	<!-- 加载图文列表 -->
-        <view class="index-container">
-			<!-- 文章列表模板 -->
-            <template is="articlesList" data="{{postsList}}" />
-			
-            <view class="loadMore">
-            	<view hidden="{{isLastPage}}">
-                    <button class="more-button" size="mini" bindtap="loadMore">加载更多</button>
-                </view>
-                <view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>
-            </view>
-            <template is="tempCopyright" />
-        </view>
-    </view>
+	<!-- 加载图文列表 -->
+	<view style='background:#eee'>
+		<!-- 文章列表模板 -->
+		<template is="articlesList" data="{{postsList}}" />
+		<view class="loadMore">
+			<button hidden="{{isLastPage}}" class="more-button" size="mini" bindtap="loadMore">加载更多</button>
+			<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>
+		</view>
+		<template is="copyright" />
+	</view>
 </view>

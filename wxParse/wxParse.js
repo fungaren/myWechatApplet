@@ -91,6 +91,24 @@ function wxParse(bindName='wxParseData', type='html',
 		transData = HtmlToJson.html2json(html, bindName);
 		//console.log(JSON.stringify(transData, ' ', ' '));
 	}
+	for (var i = 0; i < transData.nodes.length; ) {
+		var item = transData.nodes[i];
+		if (item.node == 'text' && item.text.match(/^\n+$/) )
+			transData.nodes.splice(i, 1);
+		else if (item.node == 'element') {
+			if (typeof (item.nodes) == 'undefined')
+				transData.nodes.splice(i, 1);
+			else {
+				for (var j = 0; j < item.nodes.length;) {
+					if (item.nodes[j].node == 'text' && item.nodes[j].text == '\n')
+						transData.nodes[i].nodes.splice(j, 1);
+					else ++j;
+				}
+				++i;
+			}
+		}
+		else ++i;
+	}
 	transData.view = {};
 	transData.view.imagePadding = 0;
 	if (typeof(imagePadding) != 'undefined')
@@ -139,13 +157,7 @@ function wxParseTemArray(temArrayName,bindNameReg,total,that) {
 	that.setData(obj);
 }
 
-function emojisInit(reg='', baseSrc="/wxParse/emojis/", emojis) {
-	HtmlToJson.emojisInit(reg, baseSrc, emojis);
-}
-
 module.exports = {
 	wxParse: wxParse,
 	wxParseTemArray: wxParseTemArray,
-	emojisInit: emojisInit,
-	htmlDecode: HtmlToJson.htmlDecode
 }

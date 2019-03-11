@@ -1,15 +1,11 @@
-
 <import src="../../wxParse/wxParse.wxml" />
 <import src="../../templates/copyright.wxml" />
-
-<view class="container" style="display:{{displayContent}}">
+<view class="container" hidden="{{showerror}}">
 	<view class="excerpt">
-		<!-- 正文内容 -->
 		<template is="wxParse" data="{{wxParseData: article.nodes}}" />
 	</view>
-	
 	<view class="praisePost" style='text-align:center'>
-		<button class="praise-button" formType="submit" size="mini" bindtap="praise">捐赠</button>
+		<button class="praise-button" formType="submit" size="mini" bindtap="onPraise">捐赠</button>
 	</view>
-	<template is="tempCopyright" />
+	<template is="copyright" />
 </view>

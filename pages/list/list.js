@@ -1,6 +1,5 @@
-
 var Ui = require('../../utils/ui.js');
-import config from '../../utils/config.js'
+var app = getApp();
 
 // 用于显示搜索结果、特定分类下的所有文章
 Page({
@@ -8,16 +7,16 @@ Page({
 		title: '文章列表',
 		postsList: {},
 		category: {}, // dict of name & id
-		isCategoryPage: "none",
+		isCategoryPage: false,
 		isLastPage: false,
 		page: 1,
-		showerror: "none",
-		isSearchPage: "none",
+		showerror: false,
+		isSearchPage: false,
 		searchKey: "",
 	},
 	// 用户分享该页面
 	onShareAppMessage: function () {
-		var title = config.getWebsiteName;
+		var title = app.conf.websiteName;
 		var path = "pages/list/list"
 		if (this.data.category && this.data.category.id != 0) {
 			title += "的专题：" + this.data.category.name;
@@ -37,37 +36,26 @@ Page({
 			}
 		}
 	},
-	onReachBottom: function () {
-	},
 	// 用户下拉刷新
 	onPullDownRefresh: function () {
-		var self = this;
 		if (this.data.category && this.data.category.id != 0) {
-			self.setData({
-				isCategoryPage: "block",
-				showerror: "none",
+			this.data.isCategoryPage = true;
+			wx.setNavigationBarTitle({
+				title: category.name
 			});
-			Ui.fetchCategoryPosts(self, self.data.category.id);
+			Ui.fetchPostsData(this, this.data);
 		}
-		if (self.data.searchKey && self.data.searchKey != '') {
-			self.setData({
-				isSearchPage: "block",
-				showerror: "none",
-			})
-			Ui.fetchPostsData(self, self.data);
+		if (this.data.searchKey && this.data.searchKey != '') {
+			this.data.isSearchPage = true;
+			Ui.fetchPostsData(this, this.data);
 		}
 	},
 	// 加载分页
 	loadMore: function (e) {
-		var self = this;
-		if (!self.data.isLastPage) {
-			self.setData({
-				page: self.data.page + 1
-			});
-			console.log('当前页' + self.data.page);
-			Ui.fetchPostsData(self, self.data);
-		}
-		else {
+		if (!this.data.isLastPage) {
+			this.data.page = this.data.page + 1;
+			Ui.fetchPostsData(this, this.data);
+		} else {
 			wx.showToast({
 				title: '没有更多内容',
 				mask: false,
@@ -77,16 +65,20 @@ Page({
 	},
 	onLoad: function (options) {
 		// options 是 GET 方法的参数
-		var self = this;
 		if (options.categoryId && options.categoryId != 0) {
-			self.setData({
+			var c = app.globalData.categoriesList[options.categoryId];
+			this.setData({
 				category: {
 					id: options.categoryId,
-					name: ''
+					name: c.name,
+					description: c.description
 				},
-				isCategoryPage: "block"
+				isCategoryPage: true
 			});
-			Ui.fetchCategoryPosts(self, options.categoryId);
+			wx.setNavigationBarTitle({
+				title: this.data.category.name
+			});
+			Ui.fetchPostsData(this, this.data);
 		}
 		if (options.searchKey && options.searchKey != '') {
 			wx.setNavigationBarTitle({
@@ -95,17 +87,17 @@ Page({
 					// success
 				}
 			});
-			self.setData({
-				isSearchPage: "block",
+			this.setData({
+				isSearchPage: true,
 				searchKey: options.searchKey
-			})
-			Ui.fetchPostsData(self, self.data);
+			});
+			Ui.fetchPostsData(this, this.data);
 		}
 	},
 	// 跳转至查看文章详情
 	redirectDetail: function (e) {
 		wx.navigateTo({
 			url: '../detail/detail?id=' + e.currentTarget.id
-		})
+		});
 	}
 })

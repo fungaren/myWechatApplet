@@ -1,28 +1,11 @@
-
-.topic-container{
-	background-color: #fff;
-}
-.topic-common-list {
-	padding: 48rpx 0rpx 48rpx 48rpx; 
-	margin: 0 auto;
+page {
+	background: #eee;
 }
 .list-item {
-	position: relative;
-	float: left;
-	/* border-bottom: 1px solid #eee; */
-	overflow: hidden;
-	/* clear: both;  */
-	width: 303rpx;
-	/* border: 1px solid #ccc; 
-	border-radius: 6rpx; */
-	margin-bottom: 60rpx;
-	margin-right: 48rpx;
-	background: #fff;
+	padding: 24rpx 48rpx;
 }
-.list-item image.cover {
-	width: 303rpx;
-	height: 303rpx;
-	border-radius: 12rpx;
+.list-item:active {
+	background: #eee;
 }
 .content-title {
 	padding: 16rpx 0rpx;
@@ -33,7 +16,6 @@
 .content-title text {
 	font-size: 30rpx;
 	line-height: 30rpx;
-	/* font-weight: bold; */
 	color: #1b1b1b;
 }
 .content-brief {
@@ -45,11 +27,4 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	color: #959595;
-}
-.img-menu {
-	width: 80rpx;
-	height: 40rpx;
-	display: inline-block;
-	text-align: center;
-	border-radius: 12rpx;
 }

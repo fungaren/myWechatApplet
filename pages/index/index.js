@@ -1,13 +1,12 @@
-
 var Ui = require('../../utils/ui.js');
-import config from '../../utils/config.js'
+var app = getApp();
 
 Page({
 	data: {
 		postsList: [],
 		isLastPage: false,
 		page: 1,
-		showerror: "none",
+		showerror: false,
 	},
 	// 搜索文章
 	searchSubmit: function (e) {
@@ -27,7 +26,7 @@ Page({
 	// 用户分享该页面
 	onShareAppMessage: function () {
 		return {
-			title: config.getWebsiteName + ' 博客小程序',
+			title: app.conf.websiteName + ' 博客小程序',
 			path: 'pages/index/index',
 			success: function (res) {
 				// 转发成功
@@ -39,19 +38,14 @@ Page({
 	},
 	// 用户下拉刷新
 	onPullDownRefresh: function () {
-		var self = this;
-		self.setData({
-			showerror: "none",
-			isLastPage: false,
-			page: 0
-		});
-		Ui.fetchPostsData(self, self.data);
-	},
-	// 滚动到底部
-	onReachBottom: function () {
-		
+		this.data.showerror = false;
+		this.data.isLastPage = false;
+		this.data.page = 0;
+		Ui.getCategories(this);
+		Ui.fetchPostsData(this, this.data);
 	},
 	onLoad: function (options) {
+		Ui.getCategories(this);
 		Ui.fetchPostsData(this, this.data);
 	},
 	onShow: function (options) {
@@ -78,6 +72,6 @@ Page({
 	redirectDetail: function (e) {
 		wx.navigateTo({
 			url: '../detail/detail?id=' + e.currentTarget.id
-		})
+		});
 	}
 })

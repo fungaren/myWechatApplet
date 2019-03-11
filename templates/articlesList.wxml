@@ -2,7 +2,9 @@
 <template name="articlesList">
 	<view class="common-list">
 		<block wx:key="id" wx:for="{{postsList}}">
-			<view class="list-item has-img" index="{{index}}" id="{{item.id}}" bindtap="redirectDetail">
+			<view class="list-item" id="{{item.id}}" bindtap="redirectDetail">
+				<!-- 文章头图 -->
+				<image src="{{item.post_thumbnail_image}}" mode="aspectFill" class="article-banner"></image>
 				<!-- 标题 -->
 				<view class="content-title">
 					<text>{{item.title.rendered}}</text>
@@ -16,8 +18,6 @@
 					<image src="../../images/pageviews.png"></image>
 					<text>{{item.views}}</text>
 				</view>
-				<!-- 文章头图 -->
-				<image src="{{item.post_thumbnail_image}}" mode="aspectFill" class="cover"></image>
 			</view>
 		</block>
 	</view>

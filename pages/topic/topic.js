@@ -1,49 +1,27 @@
+var Ui = require('../../utils/ui.js');
+var app = getApp();
 
-import config from '../../utils/config.js'
-var Api = require('../../utils/api.js');
 Page({
 	data: {
 		title: '分类列表',
-        categoriesList: {}
+        categoriesList: {},
+		showerror: false,
     },
     onLoad: function (options) {
-		var self = this;
         wx.setNavigationBarTitle({
-            title: config.getWebsiteName + ' 文章分类',
+			title: app.conf.websiteName + ' 文章分类',
             success: function (res) {
                 // success
             }
         });
-		self.setData({
-			categoriesList: []
+		this.setData({
+			categoriesList: app.globalData.categoriesList,
 		});
-		Api.getRequest(Api.getCategories()).then(response => {
-			if (response.statusCode === 200) {
-				self.setData({
-					categoriesList: self.data.categoriesList.concat(response.data.map(function (item) {
-						if (typeof (item.category_thumbnail_image) == "undefined" || 
-							item.category_thumbnail_image == "") {
-							item.category_thumbnail_image = "../../images/website.png";
-						}
-						return item;
-					})),
-				});
-			}
-			else {
-				console.log(response);
-			}
-		})
-		.catch(function (response) {
-			console.log(response);
-		})
-    },
-    onShow:function() {
-
     },
 	// 用户分享该页面
     onShareAppMessage: function () {
         return {
-            title: '分享 ' + config.getWebsiteName + ' 的专题栏目.',
+			title: '分享 ' + app.conf.websiteName + ' 的专题栏目.',
             path: 'pages/topic/topic',
             success: function (res) {
                 // 转发成功

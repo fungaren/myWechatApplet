@@ -1,33 +1,13 @@
-
-
 @import "../../wxParse/wxParse.wxss";
-
+.container{
+	padding: 0 24rpx;
+	background-color: #fff;
+}
 .excerpt {
-	color:#626262; 
-	font-size:32rpx;
-	line-height:64rpx;
-	text-align: left;
-}
-.h2 {
-	clear:both;
-	border-width:1px 0;
-	color:#666;
-	text-align: center; 
-	font-size:28rpx;
-	line-height:64rpx;
-	font-weight: bold;
-}
-.clearfix {
-	margin:5px 15px;
-	display:inline-block;
-}
-.praisePost {
-	position: relative;
-	text-align: left;
-	margin-top: 30rpx;
-	margin-bottom: 30rpx;
-}
-.praise-button {
-	color:  #fff;
-	background-color: #f85959;
+	margin: 32rpx 0;
+	font-size: 32rpx;
+	line-height: 48rpx;
+	color: #444;
+	word-break: break-all;
+	word-wrap: break-word;
 }
