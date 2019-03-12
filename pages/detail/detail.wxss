@@ -23,6 +23,9 @@
 .entry-date text {
 	margin: 0 32rpx 0 10rpx;
 }
+.entry-date text:last-child {
+	margin-right: 0;
+}
 .entry-summary {
 	margin: 32rpx 0;
 	font-size: 32rpx;

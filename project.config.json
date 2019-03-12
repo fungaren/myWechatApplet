@@ -8,10 +8,9 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.2",
+	"libVersion": "2.6.2",
 	"appid": "wxffa0d7b5e117ce43",
 	"projectname": "wordpress",
-	"miniprogramRoot": "./",
 	"condition": {
 		"search": {
 			"current": -1,

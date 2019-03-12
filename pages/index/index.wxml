@@ -1,4 +1,4 @@
-<import src="../../templates/articlesList.wxml" />
+<import src="../../templates/articleCard.wxml" />
 <import src="../../templates/copyright.wxml" />
 <view class="showerror" hidden="{{!showerror}}">暂时无法访问网络,下拉重试...</view>
 
@@ -15,7 +15,7 @@
 	<!-- 加载图文列表 -->
 	<view style='background:#eee'>
 		<!-- 文章列表模板 -->
-		<template is="articlesList" data="{{postsList}}" />
+		<template is="articleCard" data="{{postsList}}" />
 		<view class="loadMore">
 			<button hidden="{{isLastPage}}" class="more-button" size="mini" bindtap="loadMore">加载更多</button>
 			<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>

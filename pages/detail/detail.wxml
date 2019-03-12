@@ -1,4 +1,6 @@
 <import src="../../wxParse/wxParse.wxml" />
+<import src="../../templates/commentCard.wxml" />
+<import src="../../templates/addComment.wxml" />
 <import src="../../templates/copyright.wxml" />
 <view class="container" hidden="{{showerror}}">
 	<!-- 标题 -->
@@ -12,18 +14,26 @@
 		<text class="entry-icon-text">{{categoryName}}</text>
 
 		<image src="../../images/comments.png"></image>
-		<text class="entry-icon-text">{{commentCount}}</text>
+		<text class="entry-icon-text">{{commentCount}} 条评论</text>
 
 		<image src="../../images/pageviews.png"></image>
-		<text class="entry-icon-text">{{views}}</text>
+		<text class="entry-icon-text">{{views}} 次阅读</text>
 	</view>
 	<!-- 内容 -->
 	<view class="entry-summary">
 		<template is="wxParse" data="{{wxParseData: article.nodes}}" />
 	</view>
-
+	<!-- 捐赠 -->
 	<view class="praisePost" style='text-align:center'>
 		<button class="praise-button" formType="submit" size="mini" bindtap="onPraise">捐赠</button>
 	</view>
+	<!-- 评论 -->
+	<text class="comments">评论列表</text>
+	<template is="commentCard" data="{{commentsList}}" />
+	<view class="loadMore">
+		<button hidden="{{isLastPage}}" class="more-button" size="mini" bindtap="loadMore">加载更多</button>
+		<view class="no-more" hidden="{{!isLastPage}}">无更多评论</view>
+	</view>
 	<template is="copyright" />
 </view>
+<template is="addComment" data="{{userInfo, clear_field}}" />

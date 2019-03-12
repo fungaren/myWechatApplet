@@ -10,10 +10,10 @@ page {
 }
 .search-input {
 	flex: 1;
-	padding: 16rpx 0 16rpx 20rpx;
+	padding: 20rpx 0 20rpx 20rpx;
 	font-size: 32rpx;
 }
 .search-button {
 	border: none !important;
-	padding-top: 16rpx !important;
+	padding-top: 24rpx !important;
 }

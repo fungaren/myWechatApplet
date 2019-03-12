@@ -48,6 +48,12 @@ module.exports = {
 					// 创建一个从分类Id到分类信息的映射
 					for (var i=0; i < res.data.length; ++i)
 						app.globalData.categoriesList[res.data[i].id] = res.data[i];
+				} else {
+					wx.showToast({
+						icon: 'none',
+						title: res.data.message,
+						duration: 2000
+					});
 				}
 			},
 			fail: res => {
@@ -94,9 +100,6 @@ module.exports = {
 					page.setData({
 						showerror: false,
 						postsList: page.data.postsList.concat(res.data.map(item => {
-							// 标题中的HTML转义
-							item.title.rendered = Decode.htmlDecode(item.title.rendered)
-
 							// 获取文章的第一个图片地址,如果没有给出默认图片
 							var featureImage = item.content.rendered.match(/<img.*?(?: |\\t|\\r|\\n)?src=[\'"]?(.+?)[\'"]?(?:(?: |\\t|\\r|\\n)+.*?)?>/);
 							if (featureImage != null)
@@ -106,8 +109,12 @@ module.exports = {
 
 							// 时间戳，只取年、月、日部分
 							item.date = item.date.substring(0, 10);
-							item.commentCount = '0 条';
-							item.views = '0 次';
+							item.commentCount = 0;
+							item.views = 0;
+							// 标题中的HTML转义
+							item.title.rendered = Decode.htmlDecode(item.title.rendered)
+							// 生成摘要
+							item.excerpt.rendered = Decode.excerpt(item.content.rendered);
 							return item;
 						}))
 					});
@@ -170,12 +177,20 @@ module.exports = {
 			url: url,
 			success: res => {
 				console.log(res);
-				WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
-				page.setData({
-					content: res.data.content.rendered,
-					showerror: false
-				});
 				wx.hideLoading();
+				if (res.statusCode === 200) {
+					WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
+					page.setData({
+						content: res.data.content.rendered,
+						showerror: false
+					});
+				} else {
+					wx.showToast({
+						icon: 'none',
+						title: res.data.message,
+						duration: 2000
+					});
+				}
 			},
 			fail: function (res) {
 				console.log(res);
@@ -200,26 +215,138 @@ module.exports = {
 			url: url,
 			success: res => {
 				console.log(url);
-				WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
-				page.setData({
-					content: res.data.content.rendered,
-					// 标题中的HTML转义
-					title: Decode.htmlDecode(res.data.title.rendered),
-					commentCount: '0条评论',
-					date: res.data.date.substring(0, 10),
-					categoryName: app.globalData.categoriesList[res.data.categories].name,
-					views: '0次阅读',
-					showerror: false
-				});
-				wx.hideLoading();
+				if (res.statusCode === 200) {
+					WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
+					page.setData({
+						content: res.data.content.rendered,
+						// 标题中的HTML转义
+						title: Decode.htmlDecode(res.data.title.rendered),
+						date: res.data.date.substring(0, 10),
+						categoryName: app.globalData.categoriesList[res.data.categories].name,
+						showerror: false
+					});
+				} else {
+					wx.showToast({
+						icon: 'none',
+						title: res.data.message,
+						duration: 2000
+					});
+				}
 			},
 			fail: function (res) {
 				console.log(url);
-				wx.hideLoading();
 			}
 		});
 	},
-	
+
+	// 获取评论内容
+	fetchCommentsData: function (page, data) {
+		wx.showLoading({
+			title: '正在加载',
+			mask: true
+		});
+		if (typeof (data.id) == 'undefined')
+			data.id = app.conf.aboutId;
+		var url = HOST_URI + 'comments?post=' + data.id + '&per_page=6&parent=0&page=' + data.commentPage;
+		console.log(url);
+		wx.request({
+			url: url,
+			success: res => {
+				wx.hideLoading();
+				console.log(res);
+				if (res.statusCode === 200) {
+					page.setData({
+						commentCount: page.data.commentCount + res.data.length,
+						isLastPage: (res.data.length < 6),
+						showerror: false,
+						commentsList: page.data.commentsList.concat(res.data.map(item => {
+							item.content.rendered = Decode.excerpt(item.content.rendered);
+							item.date = item.date.replace(/T/, ' ');
+							if (item.author_url.match(/https:\/\/wx.qlogo.cn\/mmopen\/vi_32\//))
+								item.author_avatar_urls[48] = item.author_url;
+							return item;
+						}))
+					});
+				} else {
+					wx.showToast({
+						icon: 'none',
+						title: res.data.message,
+						duration: 2000
+					});
+				}
+			},
+			fail: function (res) {
+				console.log(res);
+				wx.hideLoading();
+				page.setData({
+					showerror: true
+				});
+			}
+		});
+	},
+
+	// 发布评论
+	addComment: function (page, content, id) {
+		wx.showLoading({
+			title: '正在发布',
+			mask: true
+		});
+		var url = HOST_URI + 'comments';
+		var data = {
+			author_email: 'mp@wechat.com',
+			author_name: app.globalData.userInfo.nickName,
+			author_user_agent: 'wechat',
+			content: content,
+			parent: 0,
+			post: id,
+			// 微信头像
+			author_url: app.globalData.userInfo.avatarUrl,
+			// meta: {
+			// 	wechatAvatarUrl: app.globalData.userInfo.avatarUrl
+			// }
+		};
+		console.log(url, data);
+		wx.request({
+			url: url,
+			method: 'POST',
+			data: data,
+			success: res => {
+				console.log(res);
+				wx.hideLoading();
+				if (res.statusCode === 201) {
+					wx.showToast({
+						icon: 'success',
+						title: '发布成功！',
+						duration: 1000
+					});
+					res.data.content.rendered = Decode.excerpt(res.data.content.rendered);
+					res.data.date = res.data.date.replace(/T/, ' ');
+					res.data.author_avatar_urls[48] = res.data.author_url;
+					page.setData({
+						clear_field: '',
+						commentCount: page.data.commentCount + 1,
+						commentsList: [res.data].concat(page.data.commentsList),
+					});
+				} else {
+					wx.showToast({
+						icon: 'none',
+						title: res.data.message,
+						duration: 2000
+					});
+				}
+			},
+			fail: function (res) {
+				console.log(res);
+				wx.hideLoading();
+				wx.showToast({
+					icon: 'none',
+					title: '发布失败！',
+					duration: 1000
+				});
+			}
+		});
+	},
+
 	onClickHyperLink: function (href) {
 		// 站外链接
 		if (href.indexOf(app.conf.domain) == -1) {

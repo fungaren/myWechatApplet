@@ -1,4 +1,4 @@
-<import src="../../templates/articlesList.wxml" />
+<import src="../../templates/articleCard.wxml" />
 <import src="../../templates/copyright.wxml" />
 
 <scroll-view style="height:100%;" scroll-y="true" lower-threshold="100rpx">
@@ -18,7 +18,7 @@
 			<text class="searchKey">{{searchKey}}</text>
 		</view>
 		<view class="topic-content-brief">
-			<text>本搜索是全文搜索</text>
+			<text>支持全文搜索</text>
 		</view>
     </view>
 
@@ -26,7 +26,7 @@
 	
 	<view style="display:{{showallDisplay}}" hidden="{{showerror}}">
 		<!-- 文章列表模板 -->
-		<template is="articlesList" data="{{postsList}}" />
+		<template is="articleCard" data="{{postsList}}" />
 		<view class="loadMore">
 			<button hidden="{{isLastPage}}" size="mini" bindtap="loadMore">加载更多</button>
 			<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>

@@ -1,6 +1,8 @@
+/* 全局样式 */
 page {
 	font-family: Noto Sans CJK SC, Microsoft Yahei UI, Microsoft Yahei, WenQuanYi Micro Hei, Helvetica, sans-serif;
 }
+/* 加载更多按钮 */
 .loadMore {
 	margin-top: 24rpx;
 	text-align: center;
@@ -24,6 +26,7 @@ page {
 	text-align: center;
 	margin-top: 15rpx;
 }
+/* 赞赏按钮 */
 .praise-button {
 	color: #fff;
 	background-color: #003366;
@@ -36,6 +39,7 @@ page {
 	margin-top: 30rpx;
 	margin-bottom: 30rpx;
 }
+/* 错误信息 */
 .showerror {
 	text-align: center;
 	font-weight: normal;
@@ -44,12 +48,14 @@ page {
 	color: #757575;
 	margin-top: 100rpx;
 }
+/* 版权 */
 .copyright {
 	font-size: 24rpx;
 	text-align: center;
 	margin: 32rpx 0;
 	color:#aaa;
 }
+/* 文章卡片 */
 .list-item {
 	margin-bottom: 32rpx;
 	background: #fff;
@@ -61,6 +67,11 @@ page {
 }
 .content-title {
 	color: #444;
+	padding: 12rpx 24rpx;
+}
+.content-excerpt {
+	color: #777;
+	font-size: 26rpx;
 	padding: 12rpx 24rpx;
 }
 .content-date {
@@ -77,4 +88,77 @@ page {
 	margin-right: 32rpx;
 	font-size: 22rpx;
 	font-weight: normal;
+}
+/* 评论卡片 */
+.commentCard {
+	background: #fff;
+	margin-bottom: 32rpx;
+	border-bottom:#eee dashed 2px;
+}
+.commentCard-detail {
+	display: flex;
+	flex-direction: row;
+	padding: 12rpx 12rpx;
+}
+.commentCard-detail image {
+	border-radius: 100%;
+	margin-right: 24rpx;
+	width: 72rpx;
+	height: 72rpx;
+}
+.commentCard-detail-userInfo {
+	flex: 999;
+	text-align: left;
+}
+.commentCard-detail-userInfo text {
+	font-size: 26rpx;
+	display: block;
+}
+.commentCard-detail-like {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-right: 16rpx;
+	font-size: 42rpx;
+}
+.commentCard-detail-like text {
+	font-size: 28rpx;
+	color: #777;
+}
+.commentCard-content {
+	font-size: 30rpx;
+	color: #444;
+	padding: 0 24rpx 32rpx 12rpx;
+}
+.comments {
+	border-top: #ddd dashed 2px;
+	display: block;
+	font-size: 48rpx;
+	padding-top: 32rpx;
+	margin-bottom: 32rpx;
+}
+/* 发布评论 */
+.addComment {
+	position: fixed;
+	bottom: 0;
+	background: #eee;
+	border-top: 1px solid #eee;
+	z-index: 2;
+	width: 100%;
+}
+.addComment input[type=text] {
+	width: calc(100% - 160rpx);
+	float: left;
+	background: #fff;
+	padding: 14rpx;
+	display: block;
+	font-size: 32rpx;
+}
+.addComment .right-button {
+	display: block;
+	float: right;
+	background: #003366;
+	border: none;
+	color: #fff;
+	margin-top: 10rpx;
 }
