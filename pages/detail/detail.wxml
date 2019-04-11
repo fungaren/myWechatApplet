@@ -28,12 +28,14 @@
 		<button class="praise-button" formType="submit" size="mini" bindtap="onPraise">捐赠</button>
 	</view>
 	<!-- 评论 -->
-	<text class="comments">评论列表</text>
-	<template is="commentCard" data="{{commentsList}}" />
-	<view class="loadMore">
-		<button hidden="{{isLastPage}}" class="more-button" size="mini" bindtap="loadMore">加载更多</button>
-		<view class="no-more" hidden="{{!isLastPage}}">无更多评论</view>
-	</view>
+	<block wx:if="{{id!=0}}">
+		<text class="comments">评论列表</text>
+		<template is="commentCard" data="{{commentsList}}" />
+		<view class="loadMore">
+			<button hidden="{{isLastPage}}" class="more-button" size="mini" bindtap="loadMore">加载更多</button>
+			<view class="no-more" hidden="{{!isLastPage}}">无更多评论</view>
+		</view>
+	</block>
 	<template is="copyright" />
 </view>
-<template is="addComment" data="{{userInfo, clear_field}}" />
+<template wx:if="{{id!=0}}" is="addComment" data="{{userInfo, clear_field}}" />

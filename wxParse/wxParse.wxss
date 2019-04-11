@@ -20,7 +20,7 @@
     display: inline;
 	margin-left: 6rpx;
 	background: #eee;
-    font-family: Courier, Calibri, Consolas, Menlo, Monaco !important;
+    font-family: Consolas, Courier, Calibri, Menlo, Monaco !important;
 }
 .wxParse-pre {
 	background: #eee;
@@ -80,10 +80,6 @@
 .wxParse-var, .wxParse-address {
 	font-style: italic;
 }
-.wxParse-pre, .wxParse-tt, .wxParse-code,
-.wxParse-kbd, .wxParse-samp {
-	font-family: monospace;
-}
 /*.wxParse-pre {
 	white-space: pre;
 }*/
@@ -128,7 +124,11 @@
     margin: 0;
     padding: 5px 0 5px 10px;
     background:#f5f5f5;
-    border-left: 3px solid #dbdbdb;
+	font-size: 28rpx;
+    border-left: 6px solid #eaeaea;
+}
+.wxParse-blockquote .wxParse-p {
+	line-height: 42rpx;
 }
 .wxParse-ul {
     margin: 20rpx 10rpx;

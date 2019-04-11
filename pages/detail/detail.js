@@ -19,12 +19,19 @@ Page({
 	},
 
 	onLoad: function (options) {
-		this.setData({
-			userInfo: app.globalData.userInfo,
-			id: options.id
-		});
-		Ui.fetchPostData(this, options.id);
-		Ui.fetchCommentsData(this, this.data);
+		if (isNaN(Number(options.id))) {
+			this.setData({
+				userInfo: app.globalData.userInfo
+			});
+			Ui.fetchPageData(this, options.id);
+		} else {
+			this.setData({
+				userInfo: app.globalData.userInfo,
+				id: options.id
+			});
+			Ui.fetchPostData(this, options.id);
+			Ui.fetchCommentsData(this, this.data);
+		}
 	},
 
 	onReady: function () {
@@ -112,4 +119,12 @@ Page({
 			});
 		}
 	},
+
+	// 点击回到主页
+	goHome: function (e) {
+		console.log('点击回到主页');
+		wx.switchTab({
+			url: '../index/index'
+		});
+	}
 })

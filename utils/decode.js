@@ -106,10 +106,10 @@ function strCharacterDecode(str) {
 	str = str.replace(/&quot;/g, "'");
 	str = str.replace(/&amp;/g, '&');
 
-	// str = str.replace(/&lt;/g, '‹');
-	// str = str.replace(/&gt;/g, '›');
-	str = str.replace(/&lt;/g, '<');
-	str = str.replace(/&gt;/g, '>');
+	str = str.replace(/&lt;/g, '‹');
+	str = str.replace(/&gt;/g, '›');
+	//str = str.replace(/&lt;/g, '<');
+	//str = str.replace(/&gt;/g, '>');
 
 	str = str.replace(/&#8226;/g, '•');
 	str = str.replace(/&/g, '&');
@@ -200,6 +200,14 @@ module.exports = {
 		str = strCharacterDecode(str);
 		str = strOtherDecode(str);
 		return str.substr(0, 90) + '…';
+	},
+	comment: str => {
+		str = str.replace(/\n+/g, '')
+			.replace(/<\/?[^>]+>/g, '');
+		str = strNumDecode(str);
+		str = strGreeceDecode(str);
+		str = strCharacterDecode(str);
+		return strOtherDecode(str);
 	},
 	formatTime: date => {
 		const formatNumber = n => {

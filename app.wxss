@@ -141,16 +141,22 @@ page {
 .addComment {
 	position: fixed;
 	bottom: 0;
-	background: #eee;
+	background: #fafafa;
 	border-top: 1px solid #eee;
 	z-index: 2;
 	width: 100%;
 }
+.addComment image {
+	width: 64rpx;
+	height: 64rpx;
+	float: left;
+	margin: 8rpx 4rpx 0 4rpx;
+}
 .addComment input[type=text] {
-	width: calc(100% - 160rpx);
+	width: calc(100% - 210rpx);
 	float: left;
 	background: #fff;
-	padding: 14rpx;
+	padding: 14rpx 0 16rpx 14rpx;
 	display: block;
 	font-size: 32rpx;
 }
@@ -160,5 +166,5 @@ page {
 	background: #003366;
 	border: none;
 	color: #fff;
-	margin-top: 10rpx;
+	padding: 12rpx 34rpx;
 }

@@ -4,6 +4,7 @@ var app = getApp();
 Page({
 	data: {
 		content: '',
+		id: app.conf.aboutId,
 		commentPage: 1,
 		isLastPage: false,
 		commentsList: [],
@@ -108,4 +109,12 @@ Page({
 			});
 		}
 	},
+
+	// 点击回到主页
+	goHome: function(e) {
+		console.log('点击回到主页');
+		wx.switchTab({
+			url: '../index/index'
+		});
+	}
 })

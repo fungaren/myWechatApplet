@@ -171,7 +171,11 @@ module.exports = {
 			title: '正在加载',
 			mask: true
 		});
-		var url = HOST_URI + 'pages/' + id;
+		var url;
+		if (isNaN(Number(id)))
+			url = HOST_URI + 'pages/?slug=' + id;
+		else
+			url = HOST_URI + 'pages/' + id;
 		console.log(url);
 		wx.request({
 			url: url,
@@ -179,9 +183,14 @@ module.exports = {
 				console.log(res);
 				wx.hideLoading();
 				if (res.statusCode === 200) {
+					if (typeof(res.data[0]) != 'undefined')
+						res.data = res.data[0];
 					WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
 					page.setData({
 						content: res.data.content.rendered,
+						// 标题中的HTML转义
+						title: Decode.htmlDecode(res.data.title.rendered),
+						date: res.data.date.substring(0, 10),
 						showerror: false
 					});
 				} else {
@@ -214,7 +223,7 @@ module.exports = {
 		wx.request({
 			url: url,
 			success: res => {
-				console.log(url);
+				console.log(res);
 				if (res.statusCode === 200) {
 					WxParse.wxParse('article', 'html', res.data.content.rendered, page, 5);
 					page.setData({
@@ -245,8 +254,6 @@ module.exports = {
 			title: '正在加载',
 			mask: true
 		});
-		if (typeof (data.id) == 'undefined')
-			data.id = app.conf.aboutId;
 		var url = HOST_URI + 'comments?post=' + data.id + '&per_page=6&parent=0&page=' + data.commentPage;
 		console.log(url);
 		wx.request({
@@ -260,7 +267,7 @@ module.exports = {
 						isLastPage: (res.data.length < 6),
 						showerror: false,
 						commentsList: page.data.commentsList.concat(res.data.map(item => {
-							item.content.rendered = Decode.excerpt(item.content.rendered);
+							item.content.rendered = Decode.comment(item.content.rendered);
 							item.date = item.date.replace(/T/, ' ');
 							if (item.author_url.match(/https:\/\/wx.qlogo.cn\/mmopen\/vi_32\//))
 								item.author_avatar_urls[48] = item.author_url;
@@ -362,20 +369,18 @@ module.exports = {
 						}
 					})
 				}
-			})
+			});
 		} else {
 			// 站内链接进行跳转
 			var postId = href.substring(href.lastIndexOf("/") + 1);
-			if (postId == app.conf.domain || postId == '') {
+			if (postId == '') {
 				wx.switchTab({
 					url: '../index/index'
-				})
+				});
 			}
-			else {
-				wx.redirectTo({
-					url: '../detail/detail?id=' + postId
-				})
-			}
+			wx.navigateTo({
+				url: '../detail/detail?id=' + postId
+			});
 		}
 	}
 }
