@@ -1,8 +1,0 @@
-<template name="addComment">
-	<form class='addComment' bindsubmit='onAddComment'>
-		<image src="../../images/tar-home.png" mode="aspectFill" bindtap='goHome' />
-		<input type="text" name='comment' value='{{clear_field}}' placeholder="请输入评论" autosize border="{{true}}"/>
-		<button wx:if='{{userInfo==null}}' open-type="getUserInfo" bindgetuserinfo="onGetUserInfo" plain='true' size='mini' class='right-button'>登陆</button>
-		<button wx:else size='mini' form-type='submit' plain='true' class='right-button'>发布</button>
-	</form>
-</template>

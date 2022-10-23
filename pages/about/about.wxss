@@ -1,13 +1,51 @@
-@import "../../wxParse/wxParse.wxss";
-.container{
-	padding: 0 24rpx;
-	background-color: #fff;
+@import "../../templates/comment.wxss";
+@import "../../templates/donate.wxss";
+@import "../../templates/write-comment.wxss";
+@import "../../templates/load-more.wxss";
+@import "../../templates/footer.wxss";
+
+.outer {
+  margin: 0rpx 12rpx;
 }
-.excerpt {
-	margin: 32rpx 0;
-	font-size: 32rpx;
-	line-height: 48rpx;
-	color: #444;
-	word-break: break-all;
-	word-wrap: break-word;
+.title {
+  font-size: 48rpx;
+  outline: none;
+  margin: 32rpx 0;
+  display: block;
+}
+.meta {
+  font-size: 24rpx;
+  display: flex;
+  padding-bottom: 16rpx;
+  border-bottom: 2px dashed rgba(255,255,255,.3);
+}
+.content {
+  margin: 24rpx 4rpx;
+  display: block;
+}
+.segment {
+  font-size: 36rpx;
+  outline: none;
+  margin: 32rpx 0;
+  display: block;
+}
+.comment {
+  font-size: 48rpx;
+  margin-top: 32rpx;
+  padding-bottom: 32rpx;
+  border-bottom: 2px dashed rgba(255,255,255,.3);
+}
+.comment:last-child {
+  border: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  page {
+    background: #111;
+  }
+}
+@media (prefers-color-scheme: light) {
+  page {
+    background: #eee;
+  }
 }

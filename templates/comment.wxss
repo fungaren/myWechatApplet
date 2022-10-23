@@ -1,0 +1,27 @@
+/* 评论卡片 */
+.comment-user-info {
+  display: flex;
+}
+.comment-user-info image {
+  border-radius: 100%;
+  margin-right: 24rpx;
+  width: 72rpx;
+  height: 72rpx;
+}
+.comment-user-info view {
+  display: flex;
+  flex-direction: column;
+}
+.comment-user-info .comment-author {
+  font-size: 26rpx;
+  flex-grow: 1;
+  display: block;
+}
+.comment-user-info .comment-date {
+  font-size: 20rpx;
+  display: block;
+}
+.comment-content {
+  font-size: 30rpx;
+  padding: 0 24rpx 32rpx 12rpx;
+}

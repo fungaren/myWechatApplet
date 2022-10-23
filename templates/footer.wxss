@@ -1,0 +1,8 @@
+/* 底部 */
+.footer .copyright {
+  opacity: .5;
+  display: block;
+  font-size: 24rpx;
+  text-align: center;
+  margin: 32rpx 0;
+}

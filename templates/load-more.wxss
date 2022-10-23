@@ -1,0 +1,11 @@
+/* 加载更多按钮 */
+.load-more {
+  text-align: center;
+  margin: 24rpx 0;
+}
+.no-more {
+  opacity: .5;
+  font-size: 30rpx;
+  text-align: center;
+  margin: 15rpx 0;
+}

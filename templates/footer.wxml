@@ -1,0 +1,6 @@
+<!-- 页脚模板 -->
+<template name="footer">
+  <view class="footer">
+    <text class="copyright">FANG 版权没有</text>
+  </view>
+</template>

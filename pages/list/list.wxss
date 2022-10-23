@@ -1,18 +1,27 @@
-page {
-	background: #eee;
+@import "../../templates/article.wxss";
+@import "../../templates/load-more.wxss";
+@import "../../templates/footer.wxss";
+
+.list-outer {
+  padding: 16rpx 32rpx;
 }
-.topic-common-list {
-	padding: 16rpx 32rpx;
+.list-title {
+  font-size: 42rpx;
+  line-height: 64rpx;
+  display: block;
 }
-.topic-content-title text {
-	color: #444;
-	font-size: 42rpx;
-	line-height: 64rpx;
+.list-subtitle {
+  font-size: 28rpx;
+  display: block;
 }
-.topic-content-brief text {
-	color: #777;
-	font-size: 28rpx;
+
+@media (prefers-color-scheme: dark) {
+  page {
+    background: #111;
+  }
 }
-.searchKey {
-	color: #444;
+@media (prefers-color-scheme: light) {
+  page {
+    background: #eee;
+  }
 }

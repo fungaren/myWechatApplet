@@ -1,0 +1,7 @@
+<!-- 加载更多按钮模板 -->
+<template name="load-more">
+  <view class="load-more">
+    <button hidden="{{isLastPage}}" class="more-button" size="mini" bind:tap="loadMore">加载更多</button>
+    <view hidden="{{!isLastPage}}" class="no-more">无更多内容</view>
+  </view>
+</template>

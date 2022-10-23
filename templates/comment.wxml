@@ -1,0 +1,15 @@
+<!-- 评论卡片模板 -->
+<template name="comment">
+  <!-- 评论信息 -->
+  <view class="comment-user-info">
+    <!-- 用户头像 -->
+    <image src="{{item.author_avatar_urls[48]}}" mode="scaleToFill"/>
+    <!-- 用户名称和发布时间 -->
+    <view>
+      <text class="comment-author">{{item.author_name}}</text>
+      <text class="comment-date">{{item.date}}</text>
+    </view>
+  </view>
+  <!-- 评论内容 -->
+  <text class="comment-content" user-select>{{item.content.rendered}}</text>
+</template>

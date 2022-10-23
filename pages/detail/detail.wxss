@@ -1,39 +1,51 @@
-@import "../../wxParse/wxParse.wxss";
-.container{
-	padding: 0 24rpx;
-	background-color: #fff;
+@import "../../templates/comment.wxss";
+@import "../../templates/donate.wxss";
+@import "../../templates/write-comment.wxss";
+@import "../../templates/load-more.wxss";
+@import "../../templates/footer.wxss";
+
+.outer {
+  margin: 0rpx 12rpx;
 }
-.entry-title {
-	font-size: 48rpx;
-	outline: none;
-	color: #444;
-	margin: 32rpx 0; 
+.title {
+  font-size: 48rpx;
+  outline: none;
+  margin: 32rpx 0;
+  display: block;
 }
-.entry-date {
-	font-size: 24rpx;
-	color: #777;
-	display: flex;
-	padding: 16rpx 0;
-	border-bottom: 1px solid #eee;
+.meta {
+  font-size: 24rpx;
+  display: flex;
+  padding-bottom: 16rpx;
+  border-bottom: 2px dashed rgba(255,255,255,.3);
 }
-.entry-date image {
-	width: 24rpx;
-	height: 24rpx;
+.content {
+  margin: 24rpx 4rpx;
+  display: block;
 }
-.entry-date text {
-	margin: 0 32rpx 0 10rpx;
+.segment {
+  font-size: 36rpx;
+  outline: none;
+  margin: 32rpx 0;
+  display: block;
 }
-.entry-date text:last-child {
-	margin-right: 0;
+.comment {
+  font-size: 48rpx;
+  margin-top: 32rpx;
+  padding-bottom: 32rpx;
+  border-bottom: 2px dashed rgba(255,255,255,.3);
 }
-.entry-summary {
-	margin: 32rpx 0;
-	font-size: 32rpx;
-	line-height: 48rpx;
-	color: #444;
-	word-break: break-all;
-	word-wrap: break-word;
+.comment:last-child {
+  border: none;
 }
-.entry-summary image {
-	width: 100% !important;
+
+@media (prefers-color-scheme: dark) {
+  page {
+    background: #111;
+  }
+}
+@media (prefers-color-scheme: light) {
+  page {
+    background: #eee;
+  }
 }

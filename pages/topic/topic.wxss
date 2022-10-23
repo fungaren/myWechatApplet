@@ -1,30 +1,36 @@
-page {
-	background: #eee;
+@import "../../templates/footer.wxss";
+
+.list-outer {
+  padding: 24rpx 48rpx;
+  border-bottom: 2px dashed rgba(255,255,255,.3);
 }
-.list-item {
-	padding: 24rpx 48rpx;
+.list-title {
+  font-weight: bold;
+  font-size: 36rpx;
+  line-height: 64rpx;
+  padding: 16rpx 0rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
-.list-item:active {
-	background: #eee;
+.list-subtitle {
+  padding: 0rpx 0rpx 30rpx;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
-.content-title {
-	padding: 16rpx 0rpx;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+
+@media (prefers-color-scheme: dark) {
+  page {
+    background: #111;
+  }
 }
-.content-title text {
-	font-size: 30rpx;
-	line-height: 30rpx;
-	color: #1b1b1b;
-}
-.content-brief {
-	padding: 0rpx 0rpx 30rpx;
-	font-size: 28rpx;
-	line-height: 40rpx;
-	font-weight: 400;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	color: #959595;
+@media (prefers-color-scheme: light) {
+  page {
+    background: #eee;
+  }
 }

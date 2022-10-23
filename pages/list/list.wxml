@@ -1,36 +1,22 @@
-<import src="../../templates/articleCard.wxml" />
-<import src="../../templates/copyright.wxml" />
+<import src="../../templates/article.wxml" />
+<import src="../../templates/load-more.wxml" />
+<import src="../../templates/footer.wxml" />
 
-<scroll-view style="height:100%;" scroll-y="true" lower-threshold="100rpx">
-	<!-- 分类查看 -->
-    <view class="topic-common-list" hidden="{{!isCategoryPage}}">
-		<view class="topic-content-title">
-			<text>{{category.name}}</text>
-		</view>
-		<view class="topic-content-brief">
-			<text>{{category.description}}</text>
-		</view>
-    </view>
-	<!-- 搜索结果 -->
-    <view class="topic-common-list" hidden="{{!isSearchPage}}">
-		<view class="topic-content-title">
-			<text>搜索关键字：</text>
-			<text class="searchKey">{{searchKey}}</text>
-		</view>
-		<view class="topic-content-brief">
-			<text>支持全文搜索</text>
-		</view>
-    </view>
-
-	<view class="showerror" hidden="{{!showerror}}">暂时无法访问网络</view>
-	
-	<view style="display:{{showallDisplay}}" hidden="{{showerror}}">
-		<!-- 文章列表模板 -->
-		<template is="articleCard" data="{{postsList}}" />
-		<view class="loadMore">
-			<button hidden="{{isLastPage}}" size="mini" bindtap="loadMore">加载更多</button>
-			<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>
-		</view>
-	</view>
-	<template is="copyright" />
-</scroll-view>
+<view>
+  <!-- 分类查看 -->
+  <view class="list-outer" wx:if="{{categoryId != 0}}">
+    <text class="list-title">{{categoryName}}</text>
+    <text class="list-subtitle">{{categoryDescription}}</text>
+  </view>
+  <!-- 搜索结果 -->
+  <view class="list-outer" wx:if="{{searchKey != ''}}">
+    <text class="list-title">搜索关键字：{{searchKey}}</text>
+    <text class="list-subtitle">支持全文搜索</text>
+  </view>
+  <!-- 文章列表模板 -->
+  <view wx:for="{{posts}}" wx:key="id">
+    <template is="article" data="{{item}}"/>
+  </view>
+  <template is="load-more" data="{{isLastPage}}" />
+  <template is="footer" />
+</view>

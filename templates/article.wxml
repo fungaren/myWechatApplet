@@ -1,0 +1,20 @@
+<!-- 文章卡片模板 -->
+<template name="article">
+  <view class="article" data-id="{{item.id}}" bind:tap="redirectDetail">
+    <!-- 文章头图 -->
+    <image src="{{item.post_thumbnail_image}}" mode="aspectFill" class="article-banner"></image>
+    <!-- 标题 -->
+    <view class="article-title">
+      <text>{{item.title.rendered}}</text>
+    </view>
+    <!-- 摘要内容 -->
+    <view class="article-excerpt">
+      <text>{{item.excerpt.rendered}}</text>
+    </view>
+    <!-- 日期、评论数、阅读数 -->
+    <view class="article-meta">
+      <icon type="search" size="{{16}}"></icon><text>{{item.date}}</text>
+      <icon type="search" size="{{16}}"></icon><text>{{item.categoryName}}</text>
+    </view>
+  </view>
+</template>

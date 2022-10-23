@@ -1,13 +1,9 @@
-<import src="../../templates/copyright.wxml" />
-<scroll-view scroll-y="true" lower-threshold="100rpx">
-	<view class="showerror" hidden="{{!showerror}}">暂时无法访问网络</view>
-	<view hidden="{{showerror}}" class="list-item" wx:key="id" wx:for="{{categoriesList}}">
-		<view class="content-title" data-item="{{item.name}}" data-id="{{item.id}}" bindtap="listAll">
-			<text>{{item.name}}</text>
-		</view>
-		<view class="content-brief" data-item="{{item.name}}" data-id="{{item.id}}" bindtap="listAll">
-			<text>{{item.description}}</text>
-		</view>
-	</view>
-	<template is="copyright" />
-</scroll-view>
+<import src="../../templates/footer.wxml" />
+
+<view>
+  <view class="list-outer" wx:key="id" wx:for="{{categoriesList}}">
+    <text class="list-title" data-id="{{item.id}}" bindtap="listAll">{{item.name}}</text>
+    <text class="list-subtitle" data-id="{{item.id}}" bindtap="listAll">{{item.description}}</text>
+  </view>
+  <template is="footer" />
+</view>

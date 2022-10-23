@@ -1,25 +1,24 @@
-<import src="../../templates/articleCard.wxml" />
-<import src="../../templates/copyright.wxml" />
-<view class="showerror" hidden="{{!showerror}}">暂时无法访问网络,下拉重试...</view>
+<import src="../../templates/article.wxml" />
+<import src="../../templates/load-more.wxml" />
+<import src="../../templates/footer.wxml" />
 
-<view hidden="{{showerror}}">
-	<!-- 搜索 -->
-	<form catchsubmit="searchSubmit" catchreset="formReset" id="search-form">
-		<view class="search-pancel">
-			<input name="searchKey" class="search-input" placeholder="搜索" bindsubmit="searchSubmit" />
-			<button class="search-button" form-type="submit" size="mini" plain="true">
-				<icon type="search" color="#777" size="16" />
-			</button>
-		</view>
-	</form>
-	<!-- 加载图文列表 -->
-	<view style='background:#eee'>
-		<!-- 文章列表模板 -->
-		<template is="articleCard" data="{{postsList}}" />
-		<view class="loadMore">
-			<button hidden="{{isLastPage}}" class="more-button" size="mini" bindtap="loadMore">加载更多</button>
-			<view class="no-more" hidden="{{!isLastPage}}">无更多文章</view>
-		</view>
-		<template is="copyright" />
-	</view>
+<view>
+  <!-- 搜索 -->
+  <view class="search-panel">
+    <input class="search-input" placeholder="搜索" model:value="{{searchKey}}" bind:confirm="onSearch" bind:input="nop"/>
+    <icon class="search-icon" type="search" bind:tap="onSearch" size="{{24}}"></icon>
+  </view>
+  <!-- 文章列表模板 -->
+  <view wx:for="{{posts}}" wx:key="id">
+    <template is="article" data="{{item}}"/>
+  </view>
+  <template is="load-more" data="{{isLastPage}}" />
+  <template is="footer" />
+
+  <view class="bubble">
+    <icon type="search" bind:tap="redirectTopic" size="{{32}}"></icon>
+  </view>
+  <view class="bubble">
+    <icon type="info" bind:tap="redirectAbout" size="{{32}}"></icon>
+  </view>
 </view>

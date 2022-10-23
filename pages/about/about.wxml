@@ -1,23 +1,34 @@
-<import src="../../wxParse/wxParse.wxml" />
-<import src="../../templates/commentCard.wxml" />
-<import src="../../templates/addComment.wxml" />
-<import src="../../templates/copyright.wxml" />
-<view class="container" hidden="{{showerror}}">
-	<!-- 内容 -->
-	<view class="excerpt">
-		<template is="wxParse" data="{{wxParseData: article.nodes}}" />
-	</view>
-	<!-- 捐赠 -->
-	<view class="praisePost" style='text-align:center'>
-		<button class="praise-button" formType="submit" size="mini" bindtap="onPraise">捐赠</button>
-	</view>
-	<!-- 评论 -->
-	<text class="comments">评论列表</text>
-	<template is="commentCard" data="{{commentsList}}" />
-	<view class="loadMore">
-		<button hidden="{{isLastPage}}" class="more-button" size="mini" bindtap="loadMore">加载更多</button>
-		<view class="no-more" hidden="{{!isLastPage}}">无更多评论</view>
-	</view>
-	<template is="copyright" />
+<import src="../../templates/comment.wxml" />
+<import src="../../templates/load-more.wxml" />
+<import src="../../templates/donate.wxml" />
+<import src="../../templates/footer.wxml" />
+<import src="../../templates/write-comment.wxml" />
+
+<view class="outer">
+  <!-- 标题 -->
+  <text class="title">{{title}}</text>
+  <!-- 日期、分类、评论数、阅读数 -->
+  <view class="meta">
+    <icon icon="search" size="{{16}}"></icon><text>{{date}}</text>
+    <icon icon="search" size="{{16}}"></icon><text>{{comments.length}} 条评论</text>
+  </view>
+  <!-- 内容 -->
+  <text class="content" user-select>{{content}}</text>
+
+  <!-- 捐赠 -->
+  <template is="donate"></template>
+
+  <text class="segment">评论列表</text>
+  <view>
+    <view class="comment" wx:for="{{comments}}" wx:key="id">
+      <template is="comment" data="{{item}}" />
+    </view>
+  </view>
+  <template is="load-more" data="{{isLastPage}}" />
+
+  <text class="segment">撰写评论</text>
+  <template wx:if="{{commentOpen}}" is="write-comment" data="{{userInfo}}" />
+  <text wx:else>评论已关闭</text>
+
+  <template is="footer" />
 </view>
-<template is="addComment" data="{{userInfo, clear_field}}" />

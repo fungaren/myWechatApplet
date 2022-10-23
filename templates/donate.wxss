@@ -1,0 +1,5 @@
+/* 捐赠按钮 */
+.donate {
+  text-align: center;
+  margin: 24rpx 0;
+}
