@@ -14,7 +14,7 @@ Page({
     commentPage: 1,
     isLastPage: false,
     comments: [],
-    userInfo: {},
+    userInfo: null,
   },
   // 用户分享该页面
   onShareAppMessage(res) {
@@ -39,6 +39,11 @@ Page({
     this.onLoad()
   },
   onLoad(options) {
+    if (app.globalData.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+      })
+    }
     if (!options.id || options.id == 0)
       return
     wx.getSystemInfo().then(e => {
@@ -90,16 +95,17 @@ Page({
     })
   },
   // 用户点击授权按钮的响应
-  onGetUserInfo(e) {
-    if (e.detail.errMsg != 'getUserInfo:ok')
-      console.warn('用户拒绝授权')
-    else {
-      console.log('用户同意授权', e.detail.userInfo)
-      app.globalData.userInfo = e.detail.userInfo
-      this.setData({
-        userInfo: e.detail.userInfo
-      })
-    }
+  getUserInfo(e) {
+    wx.getUserProfile({
+      desc: '登录',
+      success: res => {
+        console.log('用户同意授权', res.userInfo)
+        app.globalData.userInfo = res.userInfo
+        this.setData({
+          userInfo: res.userInfo
+        })
+      },
+    })
   },
   // 用户点击提交评论
   onAddComment(e) {
@@ -117,6 +123,7 @@ Page({
     api.addComment(this.data.id, e.detail.value.comment).then(e => {
       if (!e) return
       console.log(e)
+      e.content.rendered = utils.decodeHtmlEntities(e.content.rendered)
       this.setData({
         comments: this.data.comments.concat([ e ])
       })

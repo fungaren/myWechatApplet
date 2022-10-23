@@ -12,6 +12,12 @@
 .write-comment button {
   display: block;
 }
+.notice {
+  opacity: .5;
+  font-size: 26rpx;
+  margin-top: 12rpx;
+  display: block;
+}
 
 @media (prefers-color-scheme: dark) {
   .write-comment textarea {

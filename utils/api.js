@@ -287,7 +287,7 @@ async function getComments(page, postId) {
       'parent': 0, // 暂时不支持评论嵌套
       'page': page,
       "orderby": "date",
-      "order": "asc",
+      "order": "desc",
     })
     wx.hideLoading()
     console.log(res)

@@ -1,8 +1,9 @@
 <template name="write-comment">
   <form class="write-comment" bind:submit="onAddComment">
     <textarea placeholder="请输入评论" auto-height name="comment"/>
-    <button wx:if="{{userInfo == null}}" type="primary" open-type="getUserInfo" bind:getuserinfo="onGetUserInfo"
+    <button wx:if="{{!userInfo}}" type="primary" bind:tap="getUserInfo"
       size="mini">登陆</button>
     <button wx:else size="mini" type="primary" form-type="submit">发布</button>
   </form>
+  <text class="notice">*根据站点设置，您的评论可能不会立即显示</text>
 </template>

@@ -1,21 +1,5 @@
 App({
   towxml: require('/towxml/index'),
-  onLaunch() {
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          wx.getUserInfo({
-            success: res => {
-              console.log('用户已授权，获得用户信息', res.userInfo)
-              this.globalData.userInfo = res.userInfo
-            }
-          })
-        } else {
-          console.log('用户从未进行过授权，需要点击按钮手动授权。')
-        }
-      }
-    })
-  },
   conf: {
     // 配置域名。如果 Wordpress 没有安装在网站根目录请加上目录路径
     domain: "moooc.cc",
@@ -32,5 +16,7 @@ App({
     userInfo: null,
     categories: {},
     categoriesList: [],
-  }
+  },
+  onLaunch() {
+  },
 })

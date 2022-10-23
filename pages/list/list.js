@@ -26,7 +26,7 @@ Page({
     return {
       title: title,
       path: path,
-      success (res) {
+      success(res) {
         // 转发成功
       },
       fail(res) {
