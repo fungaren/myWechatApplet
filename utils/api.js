@@ -61,12 +61,12 @@ async function getCategories() {
         duration: 2000
       })
     }
-  } catch (res) {
+  } catch(res) {
     console.log(res)
     wx.hideLoading()
     wx.showToast({
       icon: 'none',
-      title: res.data.message,
+      title: res.errMsg,
       mask: false,
       duration: 2000
     })
@@ -112,12 +112,12 @@ async function getPosts(page=1, categoryId=0, searchKey='',
   let res
   try {
     res = await get(HOST_URI + 'posts', query)
-  } catch (res) {
+  } catch(res) {
     console.log(res)
     wx.hideLoading()
     wx.showToast({
       icon: 'none',
-      title: res.data.message,
+      title: res.errMsg,
       mask: false,
       duration: 2000
     })
@@ -198,7 +198,7 @@ async function getPageData(id) {
     wx.hideLoading()
     wx.showToast({
       icon: 'none',
-      title: res.data.message,
+      title: res.errMsg,
       mask: false,
       duration: 2000
     })
@@ -260,7 +260,7 @@ async function getPostData(id) {
     wx.hideLoading()
     wx.showToast({
       icon: 'none',
-      title: res.data.message,
+      title: res.errMsg,
       mask: false,
       duration: 2000
     })
@@ -319,7 +319,7 @@ async function getComments(page, postId) {
     wx.hideLoading()
     wx.showToast({
       icon: 'none',
-      title: res.data.message,
+      title: res.errMsg,
       mask: false,
       duration: 2000
     })
@@ -377,12 +377,12 @@ async function addComment(postId, content) {
       })
       return null
     }
-  } catch (res) {
+  } catch(res) {
     console.log(res)
     wx.hideLoading()
     wx.showToast({
       icon: 'error',
-      title: '发布失败',
+      title: res.errMsg,
       mask: false,
       duration: 2000
     })

@@ -17,10 +17,10 @@
   font-size: 24rpx;
   display: flex;
   padding-bottom: 16rpx;
-  border-bottom: 2px dashed rgba(255,255,255,.3);
+  margin-bottom: 16rpx;
 }
 .content {
-  margin: 24rpx 4rpx;
+  margin: 0;
   display: block;
 }
 .segment {
@@ -33,19 +33,24 @@
   font-size: 48rpx;
   margin-top: 32rpx;
   padding-bottom: 32rpx;
-  border-bottom: 2px dashed rgba(255,255,255,.3);
 }
 .comment:last-child {
   border: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  page {
-    background: #111;
+  .comment {
+    border-bottom: 2px dashed rgba(255,255,255,.3);
+  }
+  .meta {
+    border-bottom: 2px dashed rgba(255,255,255,.3);
   }
 }
 @media (prefers-color-scheme: light) {
-  page {
-    background: #eee;
+  .comment {
+    border-bottom: 2px dashed rgba(0,0,0,.3);
+  }
+  .meta {
+    border-bottom: 2px dashed rgba(0,0,0,.3);
   }
 }

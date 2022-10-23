@@ -37,17 +37,11 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  page {
-    background: #111;
-  }
   .search-panel {
-    background-color: #222;
+    background-color: #111;
   }
 }
 @media (prefers-color-scheme: light) {
-  page {
-    background: #eee;
-  }
   .search-panel {
     background-color: #fff;
   }

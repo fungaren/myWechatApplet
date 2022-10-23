@@ -1,6 +1,6 @@
 <!-- 捐赠按钮模板 -->
 <template name="donate">
   <view class="donate">
-    <button size="mini" bind:tap="onDonate">捐赠</button>
+    <button type="primary" size="mini" bind:tap="onDonate">捐赠</button>
   </view>
 </template>

@@ -2,7 +2,6 @@
 
 .list-outer {
   padding: 24rpx 48rpx;
-  border-bottom: 2px dashed rgba(255,255,255,.3);
 }
 .list-title {
   font-weight: bold;
@@ -25,12 +24,12 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  page {
-    background: #111;
+  .list-outer {
+    border-bottom: 2px dashed rgba(255,255,255,.3);
   }
 }
 @media (prefers-color-scheme: light) {
-  page {
-    background: #eee;
+  .list-outer {
+    border-bottom: 2px dashed rgba(0,0,0,.3);
   }
 }

@@ -9,7 +9,7 @@ Page({
     categoryId: 0,
     categoryName: '文章分类',
     date: '0000-00-00',
-    content: '文章内容',
+    content: {},
     commentOpen: true,
     commentPage: 1,
     isLastPage: false,
@@ -41,13 +41,25 @@ Page({
   onLoad(options) {
     if (!options.id || options.id == 0)
       return
+    wx.getSystemInfo().then(e => {
+      this.setData({
+        systemInfo: e
+      })
+    })
     api.getPostData(options.id).then(e => {
       if (!e) return
+      const result = app.towxml(e.content, 'html',{
+        base: app.conf.domain,
+        theme: this.data.systemInfo.theme,
+        events: {
+          tap: this.onClickContent,
+        },
+      })
       this.setData({
         id: options.id,
         title: e.title,
         date: e.date,
-        content: e.content,
+        content: result,
         categoryId: e.categoryId,
         categoryName: e.categoryName,
         commentOpen: e.commentOpen,
@@ -62,9 +74,14 @@ Page({
       })
     })
   },
-  // 点击超链接时触发
-  clickHref(e) {
-    utils.openHyperLink(e.currentTarget.dataset.src)
+  // 点击正文时触发
+  onClickContent(e) {
+    const data = e.currentTarget.dataset.data
+    console.log(data)
+    if (data.tag == "navigator") {
+      // 点击超链接时复制 URL
+      utils.openHyperLink(data.attrs.href)
+    }
   },
   // 用户点击捐赠
   onDonate() {

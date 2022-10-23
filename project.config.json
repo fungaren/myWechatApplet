@@ -2,7 +2,6 @@
   "appid": "wxffa0d7b5e117ce43",
   "projectname": "myWechatApplet",
   "compileType": "miniprogram",
-  "libVersion": "2.6.2",
   "packOptions": {
     "ignore": [],
     "include": []
@@ -20,22 +19,9 @@
     "ignoreDevUnusedFiles": false,
     "ignoreUploadUnusedFiles": false
   },
-  "condition": {
-    "miniprogram": {
-      "list": [
-        {
-          "name": "test",
-          "pathName": "COMPONENT/music",
-          "query": "a=哈哈",
-          "scene": 1044,
-          "shareInfo": {},
-          "referrerInfo": {}
-        }
-      ]
-    }
-  },
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "condition": {}
 }

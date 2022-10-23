@@ -2,3 +2,14 @@
 page {
 	font-family: sans-serif;
 }
+
+@media (prefers-color-scheme: dark) {
+  page {
+    background: #222;
+  }
+}
+@media (prefers-color-scheme: light) {
+  page {
+    background: #eee;
+  }
+}

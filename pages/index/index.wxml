@@ -19,6 +19,6 @@
     <icon type="search" bind:tap="redirectTopic" size="{{32}}"></icon>
   </view>
   <view class="bubble">
-    <icon type="info" bind:tap="redirectAbout" size="{{32}}"></icon>
+    <icon type="info_circle" bind:tap="redirectAbout" size="{{32}}"></icon>
   </view>
 </view>

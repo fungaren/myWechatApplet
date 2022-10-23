@@ -1,4 +1,5 @@
 App({
+  towxml: require('/towxml/index'),
   onLaunch() {
     wx.getSetting({
       success: res => {

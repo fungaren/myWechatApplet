@@ -1,17 +1,19 @@
 const app = getApp()
 const api = require('../../utils/api')
+const utils = require('../../utils/utils')
 
 Page({
   data: {
     id: app.conf.aboutId,
     title: '文章标题',
     date: '0000-00-00',
-    content: '文章内容',
+    content: {},
     commentOpen: true,
     commentPage: 1,
     isLastPage: false,
     comments: [],
     userInfo: {},
+    systemInfo: {},
   },
   // 用户分享该页面
   onShareAppMessage(res) {
@@ -36,17 +38,29 @@ Page({
     this.onLoad()
   },
   onLoad(options) {
+    wx.getSystemInfo().then(e => {
+      this.setData({
+        systemInfo: e
+      })
+    })
     wx.setNavigationBarTitle({
       title: '关于 ' + app.conf.websiteName + ' 官方小程序'
     })
     api.getPageData(app.conf.aboutPageId).then(e => {
       console.log(e)
       if (!e) return
+      const result = app.towxml(e.content, 'html',{
+        base: app.conf.domain,
+        theme: this.data.systemInfo.theme,
+        events: {
+          tap: this.onClickContent,
+        },
+      })
       this.setData({
         id: app.conf.aboutPageId,
         title: e.title,
         date: e.date,
-        content: e.content,
+        content: result,
         commentOpen: e.commentOpen,
       })
     })
@@ -59,9 +73,14 @@ Page({
       })
     })
   },
-  // 给a标签添加跳转和复制链接事件
-  clickHref(e) {
-    utils.openHyperLink(e.currentTarget.dataset.src)
+  // 点击正文时触发
+  onClickContent(e) {
+    const data = e.currentTarget.dataset.data
+    console.log(data)
+    if (data.tag == "navigator") {
+      // 点击超链接时复制 URL
+      utils.openHyperLink(data.attrs.href)
+    }
   },
   // 用户点击捐赠
   onDonate() {

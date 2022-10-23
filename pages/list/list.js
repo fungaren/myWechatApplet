@@ -95,7 +95,7 @@ Page({
     }
     if (this.data.searchKey && this.data.searchKey != '')
       api.getPosts(this.data.page, 0, this.data.searchKey).then(e => this.combinePosts(e))
-    else if (options.categoryId && options.categoryId != 0)
+    else if (this.data.categoryId && this.data.categoryId != 0)
       api.getPosts(this.data.page, this.data.categoryId).then(e => this.combinePosts(e))
   },
   // 跳转至查看文章详情

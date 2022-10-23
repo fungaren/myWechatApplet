@@ -9,11 +9,11 @@
   <text class="title">{{title}}</text>
   <!-- 日期、分类、评论数、阅读数 -->
   <view class="meta">
-    <icon icon="search" size="{{16}}"></icon><text>{{date}}</text>
-    <icon icon="search" size="{{16}}"></icon><text>{{comments.length}} 条评论</text>
+    <icon type="search" size="{{16}}"></icon><text>{{date}}</text>
+    <icon type="search" size="{{16}}"></icon><text>{{comments.length}} 条评论</text>
   </view>
   <!-- 内容 -->
-  <text class="content" user-select>{{content}}</text>
+  <towxml class="content" nodes="{{content}}"/>
 
   <!-- 捐赠 -->
   <template is="donate"></template>

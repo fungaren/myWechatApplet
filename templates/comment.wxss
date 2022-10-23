@@ -23,5 +23,6 @@
 }
 .comment-content {
   font-size: 30rpx;
-  padding: 0 24rpx 32rpx 12rpx;
+  padding-top: 24rpx;
+  display: block;
 }

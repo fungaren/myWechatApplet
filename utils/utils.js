@@ -1,3 +1,5 @@
+const app = getApp()
+
 function formatTime(date) {
   function formatNumber(n) {
     n = n.toString()
@@ -27,17 +29,18 @@ function openHyperLink(href) {
         })
       }
     })
+    return
+  }
+  // 站内链接进行跳转
+  const m = href.match(/\/(\d+)/)
+  if (m) {
+    wx.navigateTo({
+      url: '../detail/detail?id=' + m[1]
+    })
   } else {
-    // 站内链接进行跳转
-    var postId = href.substring(href.lastIndexOf("/") + 1)
-    if (postId == '')
-      wx.switchTab({
-        url: '../index/index'
-      })
-    else
-      wx.navigateTo({
-        url: '../detail/detail?id=' + postId
-      })
+    wx.switchTab({
+      url: '../index/index'
+    })
   }
 }
 
@@ -216,6 +219,8 @@ function decodeHtmlEntities(str) {
   str = strNumDecode(str)
   str = strGreeceDecode(str)
   str = strCharacterDecode(str)
+  str = str.replaceAll("<p>", "")
+  str = str.replaceAll("</p>", "")
   return str
 }
 

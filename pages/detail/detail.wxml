@@ -14,7 +14,7 @@
     <icon type="search" size="{{16}}"></icon><text>{{comments.length}} 条评论</text>
   </view>
   <!-- 内容 -->
-  <text class="content" user-select>{{content}}</text>
+  <towxml class="content" nodes="{{content}}"/>
 
   <!-- 捐赠 -->
   <template is="donate"></template>

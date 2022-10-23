@@ -7,6 +7,7 @@
 1. 开启评论功能需要进行额外设置（注意这可能会导致垃圾评论的增加）
 1. 暂不支持评论嵌套，只能显示评论主楼
 1. 可以在 [EasyWordPressBook](https://github.com/bestony/EasyWordPressBook) 了解 Wordpress REST API
+1. 在[微信公众平台](https://mp.weixin.qq.com/)发布你的微信小程序
 
 ### 开启评论
 

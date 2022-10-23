@@ -27,6 +27,7 @@
   "usingComponents": {},
   "permission": {},
   "useExtendedLib": {},
+  "lazyCodeLoading": "requiredComponents",
   "darkmode": true,
   "style": "v2",
   "debug": true,

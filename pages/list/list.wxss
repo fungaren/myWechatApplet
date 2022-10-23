@@ -14,14 +14,3 @@
   font-size: 28rpx;
   display: block;
 }
-
-@media (prefers-color-scheme: dark) {
-  page {
-    background: #111;
-  }
-}
-@media (prefers-color-scheme: light) {
-  page {
-    background: #eee;
-  }
-}
